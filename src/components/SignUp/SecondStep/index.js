@@ -1,5 +1,5 @@
+import Button from "@/common/components/Button";
 import Layout from "@/common/form/Layout";
-import { Button } from "@/components/ui/button";
 
 import controls from "@/config/sign-up";
 import Link from "next/link";
@@ -8,6 +8,7 @@ const SecondStep = ({
   onNext = () => {},
   formProps = {},
   onGenerateOTP = () => {},
+  loading = false,
 }) => {
   const {
     control,
@@ -32,7 +33,7 @@ const SecondStep = ({
 
       <div className="w-full flex flex-col gap-3 items-center mt-14">
         <Button
-          type="submit"
+          loading={loading}
           className="w-full"
           size="lg"
           onClick={handleSubmit(handleNext)}

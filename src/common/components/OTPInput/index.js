@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
@@ -8,6 +7,7 @@ import {
 } from "@/components/ui/input-otp";
 import useTimer from "@/hooks/useTimer";
 import { useEffect } from "react";
+import Button from "../Button";
 
 const OTPInput = ({
   value,
@@ -44,7 +44,7 @@ const OTPInput = ({
             Resend OTP in {Number(seconds)} seconds
           </span>
         ) : (
-          <Button className="p-0" variant="link" onClick={handleResend}>
+          <Button className="p-0" type="link" onClick={handleResend}>
             Resend OTP
           </Button>
         )}

@@ -1,5 +1,5 @@
+import Button from "@/common/components/Button";
 import Layout from "@/common/form/Layout";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
@@ -7,6 +7,7 @@ const ThirdStep = ({
   onHandleSubmit = () => {},
   resendOtp = () => {},
   formProps = {},
+  loading = false,
 }) => {
   const {
     control,
@@ -47,6 +48,7 @@ const ThirdStep = ({
 
       <div className="w-full flex flex-col gap-3 items-center">
         <Button
+          loading={loading}
           onClick={handleSubmit(onHandleSubmit)}
           className="w-full"
           size="lg"

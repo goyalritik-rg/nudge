@@ -29,7 +29,7 @@ export const useSignUpForm = () => {
     if (!isLoaded) return;
 
     try {
-      await new Promise((res) => setTimeout(res, 200));
+      setLoading(true);
 
       await signUp.create({
         emailAddress: email,
@@ -40,8 +40,11 @@ export const useSignUpForm = () => {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       onSuccess();
+      toast.success("OTP sent successfully");
     } catch (error) {
       toast.error(error.errors[0].longMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,6 +53,7 @@ export const useSignUpForm = () => {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       onSuccess();
+      toast.success("OTP sent successfully");
     } catch (error) {
       toast.error(error.errors[0].longMessage);
     }

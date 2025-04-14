@@ -1,15 +1,11 @@
-import { InputController, RadioController } from "@/common/form/Controllers";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import Button from "@/common/components/Button";
+import { RadioController } from "@/common/form/Controllers";
 import { cn } from "@/lib/utils";
 import { User } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-const FirstStep = ({
-  onNext = () => {},
-  onBack = () => {},
-  formProps = {},
-}) => {
+
+const FirstStep = ({ onNext = () => {}, formProps = {} }) => {
   const { control, watch } = formProps;
 
   const { type: watchType } = watch();
@@ -81,7 +77,7 @@ const FirstStep = ({
       <RadioController control={control} name="type" options={options} />
 
       <div className="w-full flex flex-col gap-3 items-center mt-14">
-        <Button type="submit" className="w-full" size="lg" onClick={handleNext}>
+        <Button className="w-full" size="lg" onClick={handleNext}>
           Continue
         </Button>
         <p>
