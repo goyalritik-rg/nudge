@@ -1,0 +1,31 @@
+[
+  {
+    "name": "fullname",
+    "label": "Full name",
+    "type": "text",
+    "placeholder": "Enter your full name",
+    "rules": { "required": true }
+  },
+  {
+    "name": "email",
+    "label": "Email",
+    "type": "text",
+    "inputType": "email",
+    "placeholder": "Enter email id",
+    "rules": { "required": true }
+  },
+  {
+    "name": "password",
+    "label": "Password",
+    "type": "password",
+    "placeholder": "Enter password",
+    "rules": { "required": true }
+  },
+  {
+    "name": "confirmPassword",
+    "label": "Confirm Password",
+    "type": "password",
+    "placeholder": "Enter the same password as above",
+    "rules": { "required": true }
+  }
+]
