@@ -1,13 +1,14 @@
 "use client";
 
 import Button from "@/common/components/Button";
-import Separator from "@/common/components/Separator";
 import Image from "next/image";
 import CodeSnippet from "./CodeSnippet";
 import useDomainSettings from "@/hooks/useDomainSettings";
 import Layout from "@/common/form/Layout";
 import Section from "@/common/components/Section";
 import { BotMessageSquare } from "lucide-react";
+import LockContent from "@/common/components/LockContent";
+import PremiumBadge from "@/common/components/PremiumBadge";
 
 const SettingsForm = ({ id, name, chatBot, plan }) => {
   const {
@@ -20,11 +21,9 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
   } = useDomainSettings(id);
 
   return (
-    <form className="flex flex-col gap-8 pb-10" onSubmit={onUpdateSettings}>
+    <div className="flex flex-col gap-8 pb-10">
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold text-xl">Domain Settings</h2>
-
-        <Separator orientation="horizontal" />
 
         <Layout
           control={control}
@@ -52,65 +51,11 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
       </div>
 
       <div className="flex flex-col gap-3 mt-5">
-        <div className="flex gap-4 items-center">
-          <h2 className="font-semibold text-xl">Chatbot Settings</h2>
-
-          <div className="flex gap-1 bg-orange-50 rounded-full px-3 py-1 text-xs items-center font-bold">
-            <Image
-              src="/icons/premium-badge.svg"
-              alt=""
-              width={20}
-              height={20}
-            />
-            Premium
-          </div>
-        </div>
-
-        <Separator orientation="horizontal" />
+        <h2 className="font-semibold text-xl">Chatbot Settings</h2>
 
         <div className="grid md:grid-cols-2">
           <div className="col-span-1 flex flex-col gap-5 order-last md:order-first">
-            <div className="py-5 flex flex-col gap-5 items-start">
-              <Section
-                label="Chatbot icon"
-                message="Change the icon for the chatbot."
-              />
-
-              <Layout
-                control={control}
-                errors={errors}
-                controls={[
-                  {
-                    name: "image",
-                    label: "Edit ChatBot Image",
-                    type: "upload",
-                  },
-                ]}
-              />
-
-              <div className="flex flex-col items-center">
-                <p className="text-muted-foreground font-medium text-sm mb-3">
-                  ChatBot Visual Representation
-                </p>
-
-                {chatBot?.icon ? (
-                  <div className="relative rounded-full overflow-hidden w-20 h-20 shadow-lg">
-                    <Image
-                      src={`https://ucarecdn.com/${chatBot.icon}/`}
-                      alt="bot"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="rounded-full cursor-pointer shadow-lg w-20 h-20 flex items-center justify-center bg-orange-100">
-                    <BotMessageSquare className="size-8" />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2 mt-8">
+            <div className="flex flex-col gap-2 my-4">
               <Section
                 label="Greeting message"
                 message="Customize your welcome message"
@@ -130,6 +75,52 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
                 ]}
                 className="max-w-[450px] pl-1"
               />
+            </div>
+
+            <div className="py-5 flex flex-col gap-5 items-start">
+              <div className="flex gap-8 items-center">
+                <Section
+                  label="Chatbot icon"
+                  message="Change the icon for the chatbot."
+                />
+
+                <PremiumBadge />
+              </div>
+
+              <LockContent>
+                <Layout
+                  control={control}
+                  errors={errors}
+                  controls={[
+                    {
+                      name: "image",
+                      label: "Edit ChatBot Image",
+                      type: "upload",
+                    },
+                  ]}
+                />
+              </LockContent>
+
+              <div className="flex flex-col items-center">
+                <p className="text-muted-foreground font-medium text-sm mb-3">
+                  ChatBot Visual Representation
+                </p>
+
+                {chatBot?.icon ? (
+                  <div className="relative rounded-full overflow-hidden w-20 h-20 shadow-lg">
+                    <Image
+                      src={`https://ucarecdn.com/${chatBot.icon}/`}
+                      alt="bot"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="rounded-full shadow-lg w-20 h-20 flex items-center justify-center bg-orange-100">
+                    <BotMessageSquare className="size-8" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -155,11 +146,15 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
           Delete Domain
         </Button>
 
-        <Button className="w-[100px] h-[50px]" loading={loading}>
+        <Button
+          className="w-[100px] h-[50px]"
+          onClick={onUpdateSettings}
+          loading={loading}
+        >
           Save
         </Button>
       </div>
-    </form>
+    </div>
   );
 };
 

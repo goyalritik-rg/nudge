@@ -2,6 +2,8 @@ import { getDomainDetails } from "@/actions/settings";
 import Header from "../../Header";
 import SettingsForm from "./SettingsForm";
 import { redirect } from "next/navigation";
+import BotTraining from "./BotTraining";
+import Separator from "@/common/components/Separator";
 
 const DomainSettings = async ({ params = {} }) => {
   const domainData = await getDomainDetails(params.domain);
@@ -29,6 +31,10 @@ const DomainSettings = async ({ params = {} }) => {
           id={id}
           name={name}
         />
+
+        <Separator />
+
+        <BotTraining id={id} />
       </div>
     </div>
   );

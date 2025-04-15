@@ -386,3 +386,90 @@ export const onCreateHelpDeskQuestion = async (id, question, answer) => {
     console.log(error);
   }
 };
+
+export const onGetAllHelpDeskQuestions = async (id) => {
+  try {
+    const questions = await client.helpDesk.findMany({
+      where: {
+        domainId: id,
+      },
+      select: {
+        question: true,
+        answer: true,
+        id: true,
+      },
+    });
+
+    return {
+      status: 200,
+      message: "New help desk question added",
+      questions: questions,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onCreateFilterQuestions = async (id, question) => {
+  try {
+    const filterQuestion = await client.domain.update({
+      where: {
+        id,
+      },
+      data: {
+        filterQuestions: {
+          create: {
+            question,
+          },
+        },
+      },
+      include: {
+        filterQuestions: {
+          select: {
+            id: true,
+            question: true,
+          },
+        },
+      },
+    });
+
+    if (filterQuestion) {
+      return {
+        status: 200,
+        message: "Filter question added",
+        questions: filterQuestion.filterQuestions,
+      };
+    }
+    return {
+      status: 400,
+      message: "Oops! something went wrong",
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onGetAllFilterQuestions = async (id) => {
+  try {
+    const questions = await client.filterQuestions.findMany({
+      where: {
+        domainId: id,
+      },
+      select: {
+        question: true,
+        id: true,
+      },
+      orderBy: {
+        question: "asc",
+      },
+    });
+
+    return {
+      status: 200,
+      message: "",
+      questions: questions,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
