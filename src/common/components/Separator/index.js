@@ -4,7 +4,7 @@ const Separator = ({ orientation = "horizontal", className }) => {
   return (
     <div
       className={cn(
-        "bg-neutral-950/15",
+        "bg-neutral-300 dark:bg-neutral-400",
         orientation === "horizontal" && "w-full h-[1px]",
         orientation === "vertical" && "h-full w-[1px]",
         className

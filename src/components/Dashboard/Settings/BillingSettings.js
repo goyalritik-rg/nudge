@@ -29,9 +29,11 @@ const BillingSettings = async () => {
           <Modal.Trigger>
             {!plan || plan === "STANDARD" ? (
               <div className="border border-dashed bg-neutral-400/15 border-neutral-950/50 rounded-2xl w-full md:w-[400px] cursor-pointer h-[220px] flex justify-center items-center gap-2">
-                <PlusCircle />
+                <PlusCircle className="text-muted-foreground" />
 
-                <div className="font-medium">Upgrade Plan</div>
+                <div className="font-medium text-muted-foreground">
+                  Upgrade Plan
+                </div>
               </div>
             ) : (
               <Image

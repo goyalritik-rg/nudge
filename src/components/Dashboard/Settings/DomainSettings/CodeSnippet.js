@@ -1,8 +1,16 @@
 import { Copy } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+  atomDark,
+  materialLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useTheme } from "next-themes";
 
 const CodeSnippet = ({ id = "" }) => {
+  const { resolvedTheme } = useTheme();
+
+  const syntaxTheme = resolvedTheme === "dark" ? materialLight : atomDark;
+
   const codeSnippet = `
     const iframe = document.createElement("iframe");
     
@@ -12,14 +20,14 @@ const CodeSnippet = ({ id = "" }) => {
     document.head.append(style);
     }
     
-    iframeStyles('
+    iframeStyles(\`
         .chat-frame {
             position: fixed;
             bottom: 50px;
             right: 50px;
             border: none;
         }
-    ')
+    \`)
     
     iframe.src = "http://localhost:3000/chatbot"
     iframe.classList.add('chat-frame')
@@ -35,8 +43,8 @@ const CodeSnippet = ({ id = "" }) => {
         `;
 
   return (
-    <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="bg-gray-800 px-4 py-2 flex justify-between items-center">
+    <div className="w-full max-w-3xl rounded-lg shadow-lg overflow-hidden">
+      <div className="bg-gray-800 dark:bg-gray-200 px-4 py-2 flex justify-between items-center">
         <div className="flex space-x-2">
           <div className="size-3 rounded-full bg-red-500" />
           <div className="size-3 rounded-full bg-yellow-500" />
@@ -44,14 +52,14 @@ const CodeSnippet = ({ id = "" }) => {
         </div>
 
         <div className="flex items-center gap-3 cursor-pointer ">
-          <p className="text-gray-400 text-xs">Copy code</p>
-          <Copy className="text-white size-4" />
+          <p className="text-gray-400 dark:text-gray-800 text-xs">Copy code</p>
+          <Copy className="text-white dark:text-gray-800 size-4" />
         </div>
       </div>
 
       <SyntaxHighlighter
         language="javascript"
-        style={atomDark}
+        style={syntaxTheme}
         customStyle={{
           borderRadius: "0px",
           margin: 0,

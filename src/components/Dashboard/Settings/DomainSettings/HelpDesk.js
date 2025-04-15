@@ -77,7 +77,7 @@ const HelpDesk = ({ id }) => {
                 <AccordionItem
                   key={index}
                   value="item-1"
-                  className="!border !border-neutral-950/15 px-4 rounded-lg mb-4"
+                  className="!border !border-neutral-300 px-4 rounded-lg mb-4"
                 >
                   <AccordionTrigger>{question.question}</AccordionTrigger>
                   <AccordionContent>{question.answer}</AccordionContent>

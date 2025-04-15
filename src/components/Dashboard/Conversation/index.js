@@ -11,7 +11,7 @@ const Conversation = () => {
       <div className="flex flex-col">
         <Header />
 
-        <div className="flex flex-col gap-15">Hello</div>
+        <div className="flex flex-col gap-15 bg-neutral-800">Hello</div>
       </div>
     </div>
   );
