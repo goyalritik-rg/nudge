@@ -2,25 +2,22 @@ import { onIntegrateDomain } from "@/actions/settings";
 import { AddDomainSchema } from "@/schemas/settings.schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadClient } from "@uploadcare/upload-client";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const upload = new UploadClient({
-  publicKey: process.env.NEXT_PUBLIC_UPLOAD_CARE_PUBLIC_KEY,
-});
-
 export const useDomain = () => {
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     resolver: zodResolver(AddDomainSchema),
   });
+  console.log(watch());
 
   const pathname = usePathname();
 
@@ -37,13 +34,13 @@ export const useDomain = () => {
     try {
       setLoading(true);
 
-      const uploaded = await upload.uploadFile(values.image[0]);
-
-      const domain = await onIntegrateDomain(values.domain, uploaded.uuid);
+      const domain = await onIntegrateDomain(
+        values.domain,
+        values?.image?.[0].uuid
+      );
 
       if (domain) {
         reset();
-        setLoading(false);
 
         const { status, message } = domain || {};
 
@@ -57,11 +54,13 @@ export const useDomain = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   });
 
   return {
-    register,
+    control,
     onAddDomain,
     errors,
     loading,

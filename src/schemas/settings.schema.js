@@ -21,7 +21,7 @@ export const AddDomainSchema = z.object({
     .refine(
       (files) =>
         GLOBAL_CONSTANTS.uploader.accepted_file_types.includes(
-          files?.[0]?.type
+          files?.[0]?.name?.split(".")?.pop()
         ),
       {
         message: "Only JPG, JPEG & PNG are accepted file formats",

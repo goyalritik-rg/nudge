@@ -4,7 +4,7 @@ const GLOBAL_CONSTANTS = {
   },
   uploader: {
     max_upload_size: 1024 * 1024 * 2, // 2MB
-    accepted_file_types: ["image/png", "image/jpg", "image/jpeg"],
+    accepted_file_types: ["png", "jpg", "jpeg"],
   },
 };
 
