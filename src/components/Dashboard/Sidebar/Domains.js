@@ -8,13 +8,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useDomain } from "@/hooks/useDomain";
 
-const Domains = ({ domains, min }) => {
+const Domains = ({ domains, size }) => {
   const { register, onAddDomain, loading, errors, isDomain } = useDomain();
 
   return (
-    <div className={cn("flex flex-col gap-3", min ? "mt-6" : "mt-3")}>
+    <div
+      className={cn("flex flex-col gap-3", size === "min" ? "mt-6" : "mt-3")}
+    >
       <div className="flex justify-between w-full items-center">
-        {!min && <p className="text-xs text-gray-500 font-semibold">DOMAINS</p>}
+        {size === "max" && (
+          <p className="text-xs text-gray-500 font-semibold">DOMAINS</p>
+        )}
 
         {/* <AppDrawer
           description="add in your domain address to integrate your chatbot"
@@ -60,7 +64,7 @@ const Domains = ({ domains, min }) => {
               key={domain.id}
               className={cn(
                 "flex gap-3 hover:bg-white rounded-full transition duration-100 ease-in-out cursor-pointer ",
-                !min ? "p-2" : "py-2",
+                size === "max" ? "p-2" : "py-2",
                 domain.name.split(".")[0] == isDomain && "bg-white"
               )}
             >
@@ -70,7 +74,7 @@ const Domains = ({ domains, min }) => {
                 width={20}
                 height={20}
               />
-              {!min && <p className="text-sm">{domain.name}</p>}
+              {size === "max" && <p className="text-sm">{domain.name}</p>}
             </Link>
           ))}
       </div>

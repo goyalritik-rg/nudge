@@ -1,9 +1,13 @@
 import Image from "next/image";
-const Banner = () => {
+
+const Banner = ({ width = 100 }) => {
   return (
-    <div>
-      <Image src="/images/logo.png" alt="logo" width={120} height={40} />
-    </div>
+    <img
+      src="/images/logo.png"
+      alt="Nudge"
+      width={100}
+      className="object-cover"
+    />
   );
 };
 

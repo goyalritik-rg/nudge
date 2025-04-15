@@ -1,5 +1,5 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useClerk } from "@clerk/nextjs";
@@ -11,8 +11,6 @@ import {
 } from "@/actions/conversation";
 
 const useSidebar = () => {
-  const router = useRouter();
-
   const pathname = usePathname();
 
   const [expand, setExpand] = useState(undefined);
@@ -59,7 +57,10 @@ const useSidebar = () => {
 
   const { signOut } = useClerk();
 
-  const onSignOut = () => signOut(() => router.push("/"));
+  const onSignOut = async () => {
+    await signOut();
+    redirect("/");
+  };
 
   const onExpand = () => setExpand((prev) => !prev);
 

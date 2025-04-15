@@ -26,6 +26,7 @@ const SignIn = () => {
           className="w-full"
           size="lg"
           onClick={handleSubmit(onHandleSubmit)}
+          loading={loading}
         >
           Continue
         </Button>
