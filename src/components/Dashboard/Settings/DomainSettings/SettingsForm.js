@@ -18,7 +18,7 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
     onDeleteDomain,
     deleting,
     loading,
-  } = useDomainSettings(id);
+  } = useDomainSettings({ id, name });
 
   return (
     <div className="flex flex-col gap-8 pb-10">
@@ -33,7 +33,6 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
               name: "domain",
               label: "Domain Name",
               type: "text",
-              value: name,
               placeholder: name,
             },
           ]}
@@ -68,7 +67,6 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
                   {
                     name: "welcomeMessage",
                     type: "textarea",
-                    value: chatBot?.welcomeMessage,
                     placeholder: chatBot?.welcomeMessage,
                     className: "h-50",
                   },
@@ -77,7 +75,7 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
               />
             </div>
 
-            <div className="py-5 flex flex-col gap-5 items-start">
+            <div className="py-5 flex flex-col items-start">
               <div className="flex gap-8 items-center">
                 <Section
                   label="Chatbot icon"
@@ -94,14 +92,13 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
                   controls={[
                     {
                       name: "image",
-                      label: "Edit ChatBot Image",
                       type: "upload",
                     },
                   ]}
                 />
               </LockContent>
 
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center mt-5">
                 <p className="text-muted-foreground font-medium text-sm mb-3">
                   ChatBot Visual Representation
                 </p>

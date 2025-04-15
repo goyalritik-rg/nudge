@@ -154,7 +154,7 @@ export const getCurrentSubscriptionPlan = async () => {
   }
 };
 
-export const getDomainDetails = async (domain) => {
+export const getDomainDetails = async (domainId) => {
   const user = await currentUser();
 
   if (!user) return;
@@ -172,9 +172,7 @@ export const getDomainDetails = async (domain) => {
         },
         domains: {
           where: {
-            name: {
-              contains: domain,
-            },
+            id: domainId,
           },
           select: {
             id: true,
@@ -225,7 +223,6 @@ export const onUpdateDomain = async (id, name) => {
         return {
           status: 200,
           message: "Domain name updated",
-          updatedDomain: name?.split(".")?.[0],
         };
       }
 

@@ -1,35 +1,26 @@
 "use client";
+
+import LoaderWrapper from "@/common/components/LoaderWrapper";
+import { Switch } from "@/components/ui/switch";
 import useSidebar from "@/hooks/useSidebar";
-// import LoaderWrapper from "@/common/components/LoaderWrapper";
 
 const BreadCrumb = () => {
-  const {
-    chatRoom,
-    expand,
-    loading,
-    onActivateRealtime,
-    onExpand,
-    page,
-    onSignOut,
-    realtime,
-  } = useSidebar();
+  const { chatRoom, loading, onActivateRealtime, page, realtime } =
+    useSidebar();
 
   return (
     <div className="flex flex-col ">
       <div className="flex gap-5 items-center">
         <h2 className="text-3xl font-bold capitalize">{page}</h2>
-        {/* {page === 'conversation' && chatRoom && (
-          <LoaderWrapper
-            loading={loading}
-            className="p-0 inline"
-          >
+        {page === "conversation" && chatRoom && (
+          <LoaderWrapper loading={loading} className="p-0 inline">
             <Switch
               defaultChecked={realtime}
               onClick={(e) => onActivateRealtime(e)}
               className="data-[state=checked]:bg-orange data-[state=unchecked]:bg-peach"
             />
           </LoaderWrapper>
-        )} */}
+        )}
       </div>
 
       <p className="text-gray-500 text-sm mt-1">

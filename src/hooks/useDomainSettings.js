@@ -1,4 +1,5 @@
 import {
+  getDomainDetails,
   onChatBotImageUpdate,
   onDeleteUserDomain,
   onUpdateDomain,
@@ -6,12 +7,12 @@ import {
 } from "@/actions/settings";
 import { DomainSettingsSchema } from "@/schemas/settings.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const useDomainSettings = (id) => {
+const useDomainSettings = ({ id, name }) => {
   const {
     control,
     handleSubmit,
@@ -19,9 +20,10 @@ const useDomainSettings = (id) => {
     reset,
   } = useForm({
     resolver: zodResolver(DomainSettingsSchema),
+    values: { name },
   });
 
-  const { refresh, replace } = useRouter();
+  const { replace, refresh } = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -36,9 +38,7 @@ const useDomainSettings = (id) => {
         toast.success(domain.message);
       }
 
-      if (values.image[0]) {
-        // const uploaded = await upload.uploadFile(values.image[0]);
-
+      if (values?.image?.[0]) {
         const image = await onChatBotImageUpdate(id, values.image[0].uuid);
 
         if (image) {
@@ -52,7 +52,7 @@ const useDomainSettings = (id) => {
         }
       }
 
-      if (values.welcomeMessage) {
+      if (values?.welcomeMessage) {
         const message = await onUpdateWelcomeMessage(values.welcomeMessage, id);
 
         if (message) {
@@ -61,12 +61,8 @@ const useDomainSettings = (id) => {
       }
 
       reset();
-
-      if (domain?.updatedDomain) {
-        replace(`/settings/${domain?.updatedDomain}`);
-      } else {
-        refresh();
-      }
+      refresh();
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     } catch (error) {
       console.log(error);
     } finally {

@@ -1,33 +1,48 @@
+// import React from 'react'
+// import TabsMenu from '../tabs/intex'
+// import { SideSheet } from '../sheet'
+// import { Plus } from 'lucide-react'
+// import { CreateProductForm } from './product-form'
+// import { TabsContent } from '../ui/tabs'
+// import { DataTable } from '../table'
+// import { TableCell, TableRow } from '../ui/table'
+// import Image from 'next/image'
+// import { getMonthName } from '@/lib/utils'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HelpDesk from "./HelpDesk";
-import FilterQuestions from "./FilterQuestions";
 
 const TABS = [
   {
-    label: "Help Desk",
-    value: "help_desk",
+    label: "All Products",
+    value: "all_products",
     component: HelpDesk,
   },
   {
-    label: "Filter questions",
-    value: "questions",
-    component: FilterQuestions,
+    label: "Live",
+    value: "live",
+    component: HelpDesk,
+  },
+  {
+    label: "Deactivated",
+    value: "deactivated",
+    component: HelpDesk,
   },
 ];
 
-const BotTraining = ({ id = "" }) => {
+const Products = ({ id, products }) => {
   return (
     <div className="py-5 mb-10 flex flex-col gap-5 items-start">
       <div className="flex flex-col gap-2">
-        <h2 className="font-bold text-2xl">Bot Training</h2>
+        <h2 className="font-bold text-2xl">Products</h2>
 
         <p className="text-sm font-light">
-          Set FAQ questions, create questions for capturing lead information and
-          train your bot to act the way you want it to.
+          Add products to your store and set them live to accept payments from
+          customers.
         </p>
       </div>
 
-      <Tabs defaultValue="help_desk" className="w-full mt-2">
+      <Tabs defaultValue="all_products" className="w-full mt-2">
         <TabsList>
           {TABS.map(({ label, value }) => {
             return (
@@ -52,4 +67,4 @@ const BotTraining = ({ id = "" }) => {
   );
 };
 
-export default BotTraining;
+export default Products;

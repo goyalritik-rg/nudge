@@ -17,7 +17,6 @@ export const useDomain = () => {
   } = useForm({
     resolver: zodResolver(AddDomainSchema),
   });
-  console.log(watch());
 
   const pathname = usePathname();
 

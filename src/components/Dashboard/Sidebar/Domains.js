@@ -73,14 +73,14 @@ const Domains = ({ domains = [], size }) => {
         {domains?.length
           ? domains.map((domain) => (
               <Link
-                href={`/settings/${domain.name.split(".")[0]}`}
+                href={`/settings/${domain.id}`}
                 key={domain.id}
                 className={cn(
                   "transition flex gap-3 hover:bg-background hover:font-semibold hover:text-foreground dark:hover:bg-neutral-800 rounded-full duration-100 ease-in-out cursor-pointer ",
                   size === "max"
                     ? "py-2 px-3"
                     : "h-[50px] w-[50px] flex items-center justify-center",
-                  domain.name.split(".")[0] == isDomain && "bg-white"
+                  domain.id == isDomain && "bg-white"
                 )}
               >
                 <Image
