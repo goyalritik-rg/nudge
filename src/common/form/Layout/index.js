@@ -97,7 +97,7 @@ function Layout({
             />
 
             {errors[name] && (
-              <div className="text-red-600 text-sm mt-1">{errorMessage}</div>
+              <div className="text-red-600 text-xs mt-1">{errorMessage}</div>
             )}
           </div>
         );

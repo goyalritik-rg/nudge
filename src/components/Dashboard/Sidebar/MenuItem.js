@@ -11,7 +11,7 @@ const MenuItem = ({ size, path, icon: Icon, label, current, onSignOut }) => {
         !current
           ? "text-gray-500"
           : current == path
-          ? "bg-background font-bold text-foreground"
+          ? "bg-background font-bold text-foreground dark:bg-neutral-800"
           : "text-gray-500"
       )}
       href={path ? `/${path}` : "#"}
