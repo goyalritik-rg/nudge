@@ -71,7 +71,19 @@ const Sidebar = ({ domains = [] }) => {
 
           <Modal>
             <Modal.Trigger>
-              <LogOut className="self-center cursor-pointer" />
+              <div
+                className={cn(
+                  "cursor-pointer flex items-center gap-2 py-2 pl-2 my-1 text-gray-500",
+                  size === "min" && "self-center pl-0"
+                )}
+              >
+                <LogOut />
+                {size === "max" ? (
+                  <span className="text-sm hover:text-foreground">
+                    Sign Out
+                  </span>
+                ) : null}
+              </div>
             </Modal.Trigger>
 
             <Modal.Content>
