@@ -74,7 +74,7 @@ const SignUp = () => {
               style={{ cursor: disabled ? "not-allowed" : "pointer" }}
               className={cn(
                 "rounded-full h-2 col-span-1 w-[33%] cursor-pointer",
-                currentStep == step ? "bg-lime-500" : "bg-gray-400"
+                currentStep == step ? "bg-orange-500" : "bg-gray-400"
               )}
             />
           );

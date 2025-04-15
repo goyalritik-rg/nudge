@@ -1,8 +1,7 @@
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-
 import { useAnimate } from "framer-motion";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { LoaderCircle } from "lucide-react";
 
 const Loader = ({ className = "" }) => {
   const [scope, animate] = useAnimate();
@@ -15,12 +14,7 @@ const Loader = ({ className = "" }) => {
     );
   }, []);
 
-  return (
-    <AiOutlineLoading3Quarters
-      ref={scope}
-      className={cn("size-6", className)}
-    />
-  );
+  return <LoaderCircle ref={scope} className={cn("size-6", className)} />;
 };
 
 export default Loader;

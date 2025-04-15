@@ -2,15 +2,14 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { Eye, EyeOff } from "lucide-react";
 
 function Password({ className, ...props }) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const toggle = () => setShowPassword((p) => !p);
 
-  const ActiveIcon = showPassword ? IoMdEyeOff : IoMdEye;
+  const ActiveIcon = showPassword ? EyeOff : Eye;
 
   return (
     <div

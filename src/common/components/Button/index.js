@@ -11,7 +11,7 @@ const loaderClasses = {
 
 const Button = ({
   type = "default",
-  size = "md",
+  size = "default",
   className,
   loading = false,
   children = null,

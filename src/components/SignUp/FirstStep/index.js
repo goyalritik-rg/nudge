@@ -15,7 +15,10 @@ const FirstStep = ({ onNext = () => {}, formProps = {} }) => {
 
     return (
       <div
-        className={cn("flex gap-4 items-center", isActive && "border-lime-500")}
+        className={cn(
+          "flex gap-4 items-center",
+          isActive && "border-orange-500"
+        )}
       >
         <div className={cn("shadow-sm p-3 border rounded-xl")}>
           <User size={30} className="text-gray-400" />
@@ -33,7 +36,7 @@ const FirstStep = ({ onNext = () => {}, formProps = {} }) => {
     {
       name: "owner",
       itemClassname: `text-foreground rounded-xl border p-5 py-8 shadow-sm w-full cursor-pointer flex gap-4 items-center ${
-        watchType === "owner" && "border-lime-500"
+        watchType === "owner" && "border-orange-500"
       }`,
       label: (
         <Label
@@ -46,7 +49,7 @@ const FirstStep = ({ onNext = () => {}, formProps = {} }) => {
     {
       name: "student",
       itemClassname: `text-foreground rounded-xl border p-5 py-8 shadow-sm w-full cursor-pointer flex gap-4 items-center ${
-        watchType === "student" && "border-lime-500"
+        watchType === "student" && "border-orange-500"
       }`,
       label: (
         <Label
