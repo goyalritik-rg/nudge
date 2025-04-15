@@ -26,7 +26,7 @@ export const UserRegistrationSchema = z
   });
 
 export const UserLoginSchema = z.object({
-  email: z.string().email({ message: "You did not enter a valid email" }),
+  email: z.string().email({ message: "Email is invalid" }),
   password: z
     .string()
     .min(8, { message: "Your password must be atleast 8 characters long" })

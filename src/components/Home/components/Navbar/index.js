@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import Banner from "../Banner";
-import Button from "../Button";
+import Banner from "@/common/components/Banner";
+import Button from "@/common/components/Button";
 
 const navLinks = [
   { label: "Home", id: "" },
