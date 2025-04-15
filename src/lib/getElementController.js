@@ -3,6 +3,7 @@ import {
   InputController,
   OTPController,
   UploadController,
+  TextareaController,
 } from "@/common/form/Controllers";
 
 const CONTROLLER_MAPPING = {
@@ -11,6 +12,7 @@ const CONTROLLER_MAPPING = {
   otp: OTPController,
   file: UploadController,
   upload: UploadController,
+  textarea: TextareaController,
 };
 
 const getElementController = (type = "input") =>

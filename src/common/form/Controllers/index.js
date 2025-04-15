@@ -3,3 +3,4 @@ export { default as PasswordController } from "./PasswordController";
 export { default as RadioController } from "./RadioController";
 export { default as OTPController } from "./OTPController";
 export { default as UploadController } from "./UploadController";
+export { default as TextareaController } from "./TextareaController";

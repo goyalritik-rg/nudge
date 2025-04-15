@@ -24,7 +24,7 @@ const controls = [
   },
 ];
 
-const Domains = ({ domains, size }) => {
+const Domains = ({ domains = [], size }) => {
   const { control, onAddDomain, loading, errors, isDomain } = useDomain();
 
   return (
@@ -70,29 +70,30 @@ const Domains = ({ domains, size }) => {
       </div>
 
       <div className="flex flex-col gap-1 text-ironside font-medium">
-        {domains?.length &&
-          domains.map((domain) => (
-            <Link
-              href={`/settings/${domain.name.split(".")[0]}`}
-              key={domain.id}
-              className={cn(
-                "transition flex gap-3 hover:bg-background hover:font-semibold hover:text-foreground dark:hover:bg-neutral-800 rounded-full duration-100 ease-in-out cursor-pointer ",
-                size === "max"
-                  ? "py-2 px-3"
-                  : "h-[50px] w-[50px] flex items-center justify-center",
-                domain.name.split(".")[0] == isDomain && "bg-white"
-              )}
-            >
-              <Image
-                src={`https://ucarecdn.com/${domain.icon}/`}
-                alt="logo"
-                width={30}
-                height={30}
-              />
+        {domains?.length
+          ? domains.map((domain) => (
+              <Link
+                href={`/settings/${domain.name.split(".")[0]}`}
+                key={domain.id}
+                className={cn(
+                  "transition flex gap-3 hover:bg-background hover:font-semibold hover:text-foreground dark:hover:bg-neutral-800 rounded-full duration-100 ease-in-out cursor-pointer ",
+                  size === "max"
+                    ? "py-2 px-3"
+                    : "h-[50px] w-[50px] flex items-center justify-center",
+                  domain.name.split(".")[0] == isDomain && "bg-white"
+                )}
+              >
+                <Image
+                  src={`https://ucarecdn.com/${domain.icon}/`}
+                  alt="logo"
+                  width={30}
+                  height={30}
+                />
 
-              {size === "max" && <p className="text-sm">{domain.name}</p>}
-            </Link>
-          ))}
+                {size === "max" && <p className="text-sm">{domain.name}</p>}
+              </Link>
+            ))
+          : null}
       </div>
     </div>
   );

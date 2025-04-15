@@ -1,8 +1,8 @@
 const Section = ({ label, message, className = "" }) => {
   return (
     <div className={className}>
-      <p className="text-sm font-medium">{label}</p>
-      <p className="text-sm font-light">{message}</p>
+      <p className="font-medium text-lg">{label}</p>
+      <p className="text-xs font-light text-muted-foreground">{message}</p>
     </div>
   );
 };
