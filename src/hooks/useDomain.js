@@ -13,7 +13,6 @@ export const useDomain = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm({
     resolver: zodResolver(AddDomainSchema),
   });

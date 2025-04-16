@@ -1,3 +1,5 @@
+"use client";
+
 import { useAnimate } from "framer-motion";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";

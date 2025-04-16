@@ -66,7 +66,7 @@ export const onIntegrateDomain = async (domain, icon) => {
               icon,
               chatBot: {
                 create: {
-                  welcomeMessage: "Hey there, have  a question? Text us here",
+                  welcomeMessage: "Hey there, have a question? Text us here",
                 },
               },
             },

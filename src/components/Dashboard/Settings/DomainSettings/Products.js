@@ -1,31 +1,19 @@
-// import React from 'react'
-// import TabsMenu from '../tabs/intex'
-// import { SideSheet } from '../sheet'
-// import { Plus } from 'lucide-react'
-// import { CreateProductForm } from './product-form'
-// import { TabsContent } from '../ui/tabs'
-// import { DataTable } from '../table'
-// import { TableCell, TableRow } from '../ui/table'
-// import Image from 'next/image'
-// import { getMonthName } from '@/lib/utils'
+"use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HelpDesk from "./HelpDesk";
+import { Plus } from "lucide-react";
+import SideSheet from "@/common/components/SideSheet";
 
 const TABS = [
   {
-    label: "All Products",
-    value: "all_products",
+    label: "Active",
+    value: "active",
     component: HelpDesk,
   },
   {
-    label: "Live",
-    value: "live",
-    component: HelpDesk,
-  },
-  {
-    label: "Deactivated",
-    value: "deactivated",
+    label: "Inactive",
+    value: "inactive",
     component: HelpDesk,
   },
 ];
@@ -42,27 +30,45 @@ const Products = ({ id, products }) => {
         </p>
       </div>
 
-      <Tabs defaultValue="all_products" className="w-full mt-2">
-        <TabsList>
-          {TABS.map(({ label, value }) => {
+      <div className="w-full mt-2 flex items-start justify-between">
+        <Tabs defaultValue="active" className="w-[80%]">
+          <TabsList>
+            {TABS.map(({ label, value }) => {
+              return (
+                <TabsTrigger key={value} value={value}>
+                  {label}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          {TABS.map(({ component: Component, value }) => {
             return (
-              <TabsTrigger key={value} value={value}>
-                {label}
-              </TabsTrigger>
+              <TabsContent key={value} value={value}>
+                <div className="mt-6 w-full">
+                  <Component id={id} />
+                </div>
+              </TabsContent>
             );
           })}
-        </TabsList>
+        </Tabs>
 
-        {TABS.map(({ component: Component, value }) => {
-          return (
-            <TabsContent key={value} value={value}>
-              <div className="mt-6 w-full">
-                <Component id={id} />
-              </div>
-            </TabsContent>
-          );
-        })}
-      </Tabs>
+        <SideSheet
+          description="Add products to your store and set them live to accept payments from
+          customers."
+          title="Add a product"
+          className="flex items-center gap-2 bg-foreground px-4 py-3 text-background transition-colors cursor-pointer font-medium rounded-lg text-sm"
+          trigger={
+            <>
+              <Plus size={20} />
+              Add Product
+            </>
+          }
+        >
+          {/* <CreateProductForm id={id} /> */}
+          Hello
+        </SideSheet>
+      </div>
     </div>
   );
 };
