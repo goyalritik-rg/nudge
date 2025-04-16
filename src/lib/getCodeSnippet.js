@@ -11,9 +11,11 @@ const getCodeSnippet = ({ id = "", tech }) => {
     iframeStyles(\`
         .chat-frame {
             position: fixed;
-            bottom: 50px;
-            right: 50px;
+            bottom: 40px;
+            right: 40px;
             border: none;
+            transition: all 0.3s ease;
+            z-index: 9999;
         }
     \`)
     
@@ -46,19 +48,20 @@ const getCodeSnippet = ({ id = "", tech }) => {
         iframeStyles(\`
             .chat-frame {
                 position: fixed;
-                bottom: 50px;
-                right: 50px;
+                bottom: 40px;
+                right: 40px;
                 border: none;
+                transition: all 0.3s ease;
                 z-index: 9999;
             }
         \`);
 
-        iframe.src = "http://localhost:3000/chatbot";
+        iframe.src = "${process.env.NEXT_PUBLIC_BASE_API_URL}/chatbot";
         iframe.classList.add("chat-frame");
         document.body.appendChild(iframe);
 
         const handleMessage = (e) => {
-            if (e.origin !== "http://localhost:3000") return;
+            if (e.origin !== "${process.env.NEXT_PUBLIC_BASE_API_URL}") return;
 
             try {
                 const dimensions = JSON.parse(e.data);
@@ -66,7 +69,7 @@ const getCodeSnippet = ({ id = "", tech }) => {
                 iframe.height = dimensions.height;
                 iframe.contentWindow.postMessage(
                 "e25ae0ba-31c9-4482-b12a-34b3ef9739a5",
-                "http://localhost:3000/"
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}/"
                 );
             } catch (err) {
                 console.error("Invalid message data", err);

@@ -9,6 +9,7 @@ import Section from "@/common/components/Section";
 import { BotMessageSquare } from "lucide-react";
 import LockContent from "@/common/components/LockContent";
 import PremiumBadge from "@/common/components/PremiumBadge";
+import ChatBot from "@/common/components/ChatBot";
 
 const SettingsForm = ({ id, name, chatBot, plan }) => {
   const {
@@ -113,9 +114,7 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
                     />
                   </div>
                 ) : (
-                  <div className="rounded-full shadow-lg w-20 h-20 flex items-center justify-center bg-orange-100 dark:bg-orange-400">
-                    <BotMessageSquare className="size-8" />
-                  </div>
+                  <ChatBot />
                 )}
               </div>
             </div>

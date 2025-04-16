@@ -31,7 +31,7 @@ const DomainSettings = async ({ params = {} }) => {
         </p>
       </div>
 
-      <div className="w-full flex flex-col gap-15 overflow-y-auto">
+      <div className="w-full flex flex-col gap-15">
         <SettingsForm
           plan={subscription?.plan}
           chatBot={chatBot}

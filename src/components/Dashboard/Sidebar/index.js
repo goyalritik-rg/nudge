@@ -18,7 +18,7 @@ const Sidebar = ({ domains = [] }) => {
   return (
     <div
       className={cn(
-        "bg-orange-50 dark:bg-black h-full w-[75px] fill-mode-forwards p-3 flex flex-col items-center justify-center rounded-2xl sticky",
+        "bg-orange-50 dark:bg-black h-full w-[75px] fill-mode-forwards p-3 flex flex-col items-center justify-center rounded-2xl",
         expand && "min-w-[260px]"
         // expand == true
         //   ? "animate-open-sidebar"

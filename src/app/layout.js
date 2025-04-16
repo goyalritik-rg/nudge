@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${poppins.variable}`}>
+        <body className={`${poppins.variable}`} id="chat-bot-container">
           <ThemeProvider
             attribute="class"
             defaultTheme="light"
