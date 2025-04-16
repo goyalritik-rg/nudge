@@ -3,7 +3,7 @@
 import useSidebar from "@/hooks/useSidebar";
 import { cn } from "@/lib/utils";
 import Banner from "@/common/components/Banner";
-import { LogOut, Menu, MonitorSmartphone } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import MenuItem from "./MenuItem";
 import Domains from "./Domains";
 import { sidebarMenuItems } from "@/config/menu";

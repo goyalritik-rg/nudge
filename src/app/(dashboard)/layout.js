@@ -1,5 +1,5 @@
 import { getUser } from "@/actions/auth";
-import Sidebar from "@/components/Dashboard/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import { ChatProvider } from "@/context/user-chat-context";
 
 const OwnerLayout = async ({ children }) => {

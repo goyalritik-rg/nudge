@@ -1,1 +1,1 @@
-export { default } from "@/components/Dashboard/Settings";
+export { default } from "@/components/Settings";

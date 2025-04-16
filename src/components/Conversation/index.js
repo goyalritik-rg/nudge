@@ -1,8 +1,7 @@
-import Separator from "@/common/components/Separator";
-import Header from "../Header";
 import { getAllUserDomains } from "@/actions/settings";
 import LeftMenu from "./LeftMenu";
 import Messenger from "./Messenger";
+import Header from "../Header";
 
 const Conversation = async () => {
   const domainsData = await getAllUserDomains();
