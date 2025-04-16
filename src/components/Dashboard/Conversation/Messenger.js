@@ -7,8 +7,26 @@ import { cn } from "@/lib/utils";
 import { SendHorizonal } from "lucide-react";
 
 const Messenger = () => {
-  const { messageWindowRef, chats, chatRoom, onHandleSentMessage, control } =
-    useChatWindow();
+  const {
+    messageWindowRef,
+    chats,
+    chatRoom,
+    onHandleSentMessage,
+    control,
+    realtime: isRealTime = false,
+  } = useChatWindow();
+
+  const disabled = !chatRoom || !isRealTime;
+
+  let placeholder = "Type your message...";
+
+  if (!isRealTime) {
+    placeholder = "Enable Realtime Mode to start sending messages";
+  }
+
+  if (!chatRoom) {
+    placeholder = "Select any chat to send message";
+  }
 
   return (
     <div className="flex flex-col relative w-full h-full -mt-5">
@@ -30,7 +48,7 @@ const Messenger = () => {
               />
             ))
           ) : (
-            <div>No Chat Selected</div>
+            <div>No Messages Found</div>
           )}
         </div>
       </div>
@@ -39,20 +57,21 @@ const Messenger = () => {
         <InputController
           control={control}
           name="content"
-          placeholder="Type your message..."
+          disabled={disabled}
+          placeholder={placeholder}
           className="focus-visible:ring-0 py-4 focus-visible:ring-offset-0 bg-muted rounded-none outline-none border-none h-20 w-[95%] pl-4"
         />
 
         <SendHorizonal
           onClick={() => {
-            if (!chatRoom) {
+            if (disabled) {
               return;
             }
             onHandleSentMessage();
           }}
           className={cn(
             "cursor-pointer text-accent-foreground",
-            !chatRoom && "cursor-not-allowed text-muted-foreground"
+            disabled && "cursor-not-allowed text-muted-foreground"
           )}
         />
       </div>

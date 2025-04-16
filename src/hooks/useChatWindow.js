@@ -2,12 +2,14 @@ import { onGetChatMessages, onOwnerSendMessage } from "@/actions/conversation";
 import { useChatContext } from "@/context/user-chat-context";
 import { ChatBotMessageSchema } from "@/schemas/conversation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const useChatWindow = () => {
-  const { chats, loading, setChats, chatRoom } = useChatContext();
+  const [chats, setChats] = useState([]);
+
+  const { loading, chatRoom, realtime } = useChatContext();
 
   const messageWindowRef = useRef(null);
 
@@ -26,7 +28,7 @@ const useChatWindow = () => {
     }, 500);
   };
 
-  const fetchChats = async ({ initial = false }) => {
+  const fetchChats = async ({ initial = false } = {}) => {
     if (!chatRoom) {
       return;
     }
@@ -111,6 +113,7 @@ const useChatWindow = () => {
     chats,
     loading,
     chatRoom,
+    realtime,
   };
 };
 

@@ -14,39 +14,45 @@ const useSidebar = () => {
   const pathname = usePathname();
 
   const [expand, setExpand] = useState(undefined);
-  const [realtime, setRealtime] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { chatRoom } = useChatContext();
+  const { chatRoom, realtime, setRealtime } = useChatContext();
 
-  const onActivateRealtime = async (e) => {
+  const getRealtime = async () => {
     try {
-      const realtime = await onToggleRealtime(chatRoom, e);
+      setLoading(true);
 
-      if (realtime) {
-        setRealtime(realtime.chatRoom.live);
+      const mode = await onGetConversationMode(chatRoom);
 
-        toast.success(realtime.message);
+      if (mode) {
+        setRealtime(mode?.live);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const onGetCurrentMode = async () => {
-    setLoading(true);
+  const updateRealtime = async (newValue) => {
+    try {
+      setLoading(true);
 
-    const mode = await onGetConversationMode(chatRoom);
-
-    if (mode) {
-      setRealtime(mode.live);
+      await onToggleRealtime(chatRoom, newValue);
+      toast.success(
+        newValue ? "RealTime mode enabled" : "RealTime mode disabled"
+      );
+      await getRealtime();
+    } catch (error) {
+      console.log(error);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     if (chatRoom) {
-      onGetCurrentMode();
+      getRealtime();
     }
   }, [chatRoom]);
 
@@ -67,7 +73,7 @@ const useSidebar = () => {
     page,
     onSignOut,
     realtime,
-    onActivateRealtime,
+    onActivateRealtime: updateRealtime,
     chatRoom,
     loading,
   };
