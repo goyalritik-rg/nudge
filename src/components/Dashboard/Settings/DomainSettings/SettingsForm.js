@@ -133,7 +133,7 @@ const SettingsForm = ({ id, name, chatBot, plan }) => {
         </div>
       </div>
 
-      <div className="flex gap-5 justify-end">
+      <div className="flex gap-5 justify-start">
         <Button
           onClick={onDeleteDomain}
           type="destructive"
