@@ -17,14 +17,16 @@ const useChatWindow = () => {
   });
 
   const onScrollToBottom = () => {
-    messageWindowRef.current?.scroll({
-      top: messageWindowRef.current.scrollHeight,
-      left: 0,
-      behavior: "smooth",
-    });
+    setTimeout(() => {
+      messageWindowRef.current?.scroll({
+        top: messageWindowRef.current.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+    }, 500);
   };
 
-  const fetchChats = async () => {
+  const fetchChats = async ({ initial = false }) => {
     if (!chatRoom) {
       return;
     }
@@ -36,6 +38,10 @@ const useChatWindow = () => {
 
       if (allMessages) {
         setChats(allMessages);
+
+        if (initial) {
+          onScrollToBottom();
+        }
       } else {
         toast.error("Something went wrong!");
         setChats([]);
@@ -54,7 +60,8 @@ const useChatWindow = () => {
       );
 
       if (message) {
-        fetchChats();
+        await fetchChats();
+        onScrollToBottom();
       }
 
       //   if (message) {
@@ -72,13 +79,9 @@ const useChatWindow = () => {
   });
 
   useEffect(() => {
-    onScrollToBottom();
-  }, [chats, messageWindowRef]);
-
-  useEffect(() => {
     let intervalId;
 
-    fetchChats();
+    fetchChats({ initial: true });
 
     intervalId = setInterval(() => {
       fetchChats();

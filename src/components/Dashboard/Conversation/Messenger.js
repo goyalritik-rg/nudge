@@ -15,7 +15,7 @@ const Messenger = () => {
       <div className="flex flex-col">
         <div
           ref={messageWindowRef}
-          className="w-full flex-1 flex flex-col gap-3 p-5 chat-window overflow-y-auto"
+          className="w-full h-[65dvh] flex flex-col gap-3 p-5 chat-window overflow-y-auto"
         >
           {chats.length ? (
             chats.map((chat) => (
@@ -26,6 +26,7 @@ const Messenger = () => {
                   content: chat.message,
                 }}
                 createdAt={chat.createdAt}
+                reverseView
               />
             ))
           ) : (

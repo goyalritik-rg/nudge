@@ -5,16 +5,22 @@ import Link from "next/link";
 import { cn, extractUUIDFromString, getMonthName } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const Bubble = ({ message, createdAt, size = "md" }) => {
+const Bubble = ({ message, createdAt, size = "md", reverseView = false }) => {
   let d = new Date();
 
   const image = extractUUIDFromString(message.content);
+
+  let key = "assistant";
+
+  if (reverseView) {
+    key = "user";
+  }
 
   return (
     <div
       className={cn(
         "flex gap-2 items-end",
-        message.role == "assistant" ? "self-start" : "self-end flex-row-reverse"
+        message.role == key ? "self-start" : "self-end flex-row-reverse"
       )}
     >
       {message.role == "assistant" ? (
@@ -33,7 +39,7 @@ const Bubble = ({ message, createdAt, size = "md" }) => {
       <div
         className={cn(
           "flex flex-col gap-3 min-w-[200px] max-w-[300px] p-4 rounded-t-md",
-          message.role == "assistant"
+          message.role == key
             ? "bg-muted rounded-r-md"
             : "bg-orange-50 rounded-l-md"
         )}
