@@ -5,6 +5,7 @@ import {
   materialLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useTheme } from "next-themes";
+import { copyToClipboard } from "@/lib/utils";
 
 const CodeSnippet = ({ id = "" }) => {
   const { resolvedTheme } = useTheme();
@@ -29,16 +30,16 @@ const CodeSnippet = ({ id = "" }) => {
         }
     \`)
     
-    iframe.src = "http://localhost:3000/chatbot"
+    iframe.src = "${process.env.NEXT_PUBLIC_BASE_API_URL}/chatbot"
     iframe.classList.add('chat-frame')
     document.body.appendChild(iframe)
     
     window.addEventListener("message", (e) => {
-        if(e.origin !== "http://localhost:3000") return null
+        if(e.origin !== "${process.env.NEXT_PUBLIC_BASE_API_URL}") return null
         let dimensions = JSON.parse(e.data)
         iframe.width = dimensions.width
         iframe.height = dimensions.height
-        iframe.contentWindow.postMessage("${id}", "http://localhost:3000/")
+        iframe.contentWindow.postMessage("${id}", "${process.env.NEXT_PUBLIC_BASE_API_URL}/")
     })
         `;
 
@@ -51,7 +52,11 @@ const CodeSnippet = ({ id = "" }) => {
           <div className="size-3 rounded-full bg-green-500" />
         </div>
 
-        <div className="flex items-center gap-3 cursor-pointer ">
+        <div
+          className="flex items-center gap-3 cursor-pointer"
+          role="presentation"
+          onClick={() => copyToClipboard({ text: codeSnippet })}
+        >
           <p className="text-gray-400 dark:text-gray-800 text-xs">Copy code</p>
           <Copy className="text-white dark:text-gray-800 size-4" />
         </div>
