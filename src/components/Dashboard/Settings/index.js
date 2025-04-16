@@ -5,7 +5,7 @@ import Theme from "./Theme";
 
 const Settings = () => {
   return (
-    <div className="flex flex-col p-3 md:p-6 ml-4 mb-10">
+    <div className="flex flex-col p-4 mb-10">
       <Header />
 
       <div className="w-full flex flex-col gap-15">

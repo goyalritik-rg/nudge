@@ -11,8 +11,10 @@ const OwnerLayout = async ({ children }) => {
 
   return (
     <ChatProvider>
-      <div className="h-full w-full flex">
-        <Sidebar domains={userData.domains} />
+      <div className="h-[100%] w-full flex">
+        <div className="p-4 h-[100dvh]">
+          <Sidebar domains={userData.domains} />
+        </div>
 
         {children}
       </div>

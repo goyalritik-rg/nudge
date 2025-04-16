@@ -21,7 +21,7 @@ const DomainSettings = async ({ params = {} }) => {
   }
 
   return (
-    <div className="flex flex-col p-3 md:p-6 ml-4 mb-10 w-full">
+    <div className="flex flex-col p-4 mb-10 w-full">
       <div className="flex flex-col mb-16">
         <h2 className="text-3xl font-bold capitalize">Domain - {name}</h2>
 
