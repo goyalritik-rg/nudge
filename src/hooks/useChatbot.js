@@ -1,4 +1,4 @@
-import { onGetCurrentChatBot } from "@/actions/chatbot";
+import { onAiChatBotAssistant, onGetCurrentChatBot } from "@/actions/chatbot";
 import { postToParent } from "@/lib/utils";
 import { ChatBotMessageSchema } from "@/schemas/conversation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,9 +15,12 @@ const useChatBot = () => {
     formState: { errors },
     control,
     register,
+    watch,
   } = useForm({
     resolver: zodResolver(ChatBotMessageSchema),
   });
+
+  const values = watch();
 
   const messageWindowRef = useRef(null);
 
@@ -52,85 +55,57 @@ const useChatBot = () => {
           content: chatbot.chatBot?.welcomeMessage,
         },
       ]);
+
       setCurrentBot(chatbot);
       setLoading(false);
     }
   };
 
   const onStartChatting = handleSubmit(async (values) => {
-    //   if (values.image.length) {
-    //     const uploaded = await upload.uploadFile(values.image[0])
-    //     if (!onRealTime?.mode) {
-    //       setOnChats((prev: any) => [
-    //         ...prev,
-    //         {
-    //           role: 'user',
-    //           content: uploaded.uuid,
-    //         },
-    //       ])
-    //     }
-
-    //     console.log('🟡 RESPONSE FROM UC', uploaded.uuid)
-    //     setOnAiTyping(true)
-    //     const response = await onAiChatBotAssistant(
-    //       currentBotId!,
-    //       onChats,
-    //       'user',
-    //       uploaded.uuid
-    //     )
-
-    //     if (response) {
-    //       setOnAiTyping(false)
-    //       if (response.live) {
-    //         setOnRealTime((prev) => ({
-    //           ...prev,
-    //           chatroom: response.chatRoom,
-    //           mode: response.live,
-    //         }))
-    //       } else {
-    //         setOnChats((prev: any) => [...prev, response.response])
-    //       }
-    //     }
-    //   }
-
-    if (values.content) {
-      if (!onRealTime?.mode) {
-        setOnChats((prev) => [
-          ...prev,
-          {
-            role: "user",
-            content: values.content,
-          },
-        ]);
-      }
-
-      setOnAiTyping(true);
-
-      const response = await onAiChatBotAssistant(
-        currentBotId,
-        onChats,
-        "user",
-        values.content
-      );
-
-      if (response) {
-        setOnAiTyping(false);
-
-        if (response.live) {
-          setOnRealTime((prev) => ({
+    try {
+      if (values.content) {
+        if (!onRealTime?.mode) {
+          setOnChats((prev) => [
             ...prev,
-            chatroom: response.chatRoom,
-            mode: response.live,
-          }));
-        } else {
-          setOnChats((prev) => [...prev, response.response]);
+            {
+              role: "user",
+              content: values.content,
+            },
+          ]);
         }
 
-        reset();
-      } else {
-        setOnAiTyping(false);
-        toast.error("Something went wrong! Please try again");
+        setOnAiTyping(true);
+
+        const response = await onAiChatBotAssistant(
+          currentBotId,
+          onChats,
+          "user",
+          values.content
+        );
+
+        if (response) {
+          setOnAiTyping(false);
+
+          if (response.live) {
+            setOnRealTime((prev) => ({
+              ...prev,
+              chatroom: response.chatRoom,
+              mode: response.live,
+            }));
+          } else {
+            setOnChats((prev) => [...prev, response.response]);
+          }
+
+          reset();
+        } else {
+          setOnAiTyping(false);
+          toast.error("Something went wrong! Please try again");
+        }
       }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setOnAiTyping(false);
     }
   });
 
@@ -172,6 +147,7 @@ const useChatBot = () => {
     onRealTime,
     errors,
     control,
+    values,
   };
 };
 

@@ -41,3 +41,13 @@ export const getMonthName = (month) => {
 
   return GLOBAL_CONSTANTS.constants.months[month];
 };
+
+export const getDomainName = (domain) => {
+  if (!domain) {
+    return "";
+  }
+
+  return domain.includes("www.")
+    ? domain.split("www.")?.[1]?.split(".")?.[0]
+    : domain.split(".")?.[0];
+};

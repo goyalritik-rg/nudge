@@ -4,6 +4,7 @@ import ChatBot from "@/common/components/ChatBot";
 import useChatBot from "@/hooks/useChatbot";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
+import BotWindow from "./Window";
 
 const Chatbot = () => {
   const {
@@ -19,6 +20,8 @@ const Chatbot = () => {
     onRealTime,
     setOnChats,
     errors,
+    control,
+    values = {},
   } = useChatBot();
 
   useEffect(() => {
@@ -29,17 +32,26 @@ const Chatbot = () => {
     }
   }, []);
 
-  console.log("botOpened", botOpened);
-
   return (
     <div className="h-screen flex flex-col justify-end items-end gap-4">
       {botOpened && (
-        <div
-          id="chat-bot-container"
-          className="w-[400px] h-[500px] bg-white rounded-xl shadow-xl p-4"
-        >
-          Hello! I’m a bot.
-        </div>
+        <BotWindow
+          errors={errors}
+          setChat={setOnChats}
+          realtimeMode={onRealTime}
+          helpdesk={currentBot?.helpdesk}
+          domainName={currentBot?.name}
+          ref={messageWindowRef}
+          help={currentBot?.chatBot?.helpdesk}
+          theme={currentBot?.chatBot?.background}
+          textColor={currentBot?.chatBot?.textColor}
+          chats={onChats}
+          register={register}
+          onChat={onStartChatting}
+          onResponding={onAiTyping}
+          control={control}
+          values={values}
+        />
       )}
 
       <div

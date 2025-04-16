@@ -6,6 +6,8 @@ import { clerkClient } from "@clerk/nextjs";
 import OpenAI from "openai";
 import { onMailer } from "../mailer";
 
+let customerEmail;
+
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_KEY,
 });
@@ -80,6 +82,8 @@ export const onAiChatBotAssistant = async (
       },
     });
 
+    console.log("chatBotDomain", chatBotDomain);
+
     if (!chatBotDomain) {
       return {
         status: 400,
@@ -87,9 +91,9 @@ export const onAiChatBotAssistant = async (
       };
     }
 
-    let customerEmail;
-
     const extractedEmail = extractEmailsFromString(message);
+
+    console.log("extractedEmail", extractedEmail);
 
     if (extractedEmail) {
       customerEmail = extractedEmail[0];
@@ -380,6 +384,8 @@ export const onAiChatBotAssistant = async (
       model: "gpt-3.5-turbo",
       store: true,
     });
+
+    console.log("chatCompletion", chatCompletion);
 
     if (chatCompletion) {
       const response = {
