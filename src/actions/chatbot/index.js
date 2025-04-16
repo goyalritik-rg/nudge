@@ -82,8 +82,6 @@ export const onAiChatBotAssistant = async (
       },
     });
 
-    console.log("chatBotDomain", chatBotDomain);
-
     if (!chatBotDomain) {
       return {
         status: 400,
@@ -92,8 +90,6 @@ export const onAiChatBotAssistant = async (
     }
 
     const extractedEmail = extractEmailsFromString(message);
-
-    console.log("extractedEmail", extractedEmail);
 
     if (extractedEmail) {
       customerEmail = extractedEmail[0];
@@ -200,7 +196,7 @@ export const onAiChatBotAssistant = async (
             },
           });
 
-          console.log("mailed", mailed);
+          console.log("MAILED");
 
           if (mailed) {
             return {
@@ -384,8 +380,6 @@ export const onAiChatBotAssistant = async (
       model: "gpt-3.5-turbo",
       store: true,
     });
-
-    console.log("chatCompletion", chatCompletion);
 
     if (chatCompletion) {
       const response = {

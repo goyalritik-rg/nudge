@@ -25,8 +25,14 @@ const useChatWindow = () => {
   };
 
   const fetchChats = async () => {
+    if (!chatRoom) {
+      return;
+    }
+
     try {
-      const allMessages = onGetChatMessages(chatRoom);
+      const chatRoomData = await onGetChatMessages(chatRoom);
+
+      const { message: allMessages } = chatRoomData?.[0] || {};
 
       if (allMessages) {
         setChats(allMessages);
@@ -70,20 +76,16 @@ const useChatWindow = () => {
   }, [chats, messageWindowRef]);
 
   useEffect(() => {
-    if (!chatRoom) {
-      return;
-    }
-
     let intervalId;
 
     fetchChats();
 
     intervalId = setInterval(() => {
-      fetchRooms();
-    }, 2000);
+      fetchChats();
+    }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [chatRoom]);
 
   // useEffect(() => {
   //   if (chatRoom) {

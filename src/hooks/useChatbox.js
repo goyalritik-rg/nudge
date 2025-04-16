@@ -6,8 +6,6 @@ import { getMonthName } from "@/lib/utils";
 const useChatbox = (createdAt, roomId) => {
   const { chatRoom } = useChatContext();
 
-  console.log("createdAt", createdAt);
-
   const [messageSentAt, setMessageSentAt] = useState("");
   const [urgent, setUrgent] = useState(false);
 
@@ -36,7 +34,6 @@ const useChatbox = (createdAt, roomId) => {
         setUrgent(true);
       }
     } else {
-      console.log("messageDate.getMonth()", messageDate.getMonth());
       setMessageSentAt(
         `${messageDate.getDate()} ${
           getMonthName(messageDate.getMonth())?.short_label

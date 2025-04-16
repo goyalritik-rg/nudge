@@ -1,6 +1,5 @@
 "use client";
 
-import LoaderWrapper from "@/common/components/LoaderWrapper";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import useSidebar from "@/hooks/useSidebar";
@@ -14,16 +13,14 @@ const BreadCrumb = () => {
       <div className="flex gap-5 items-center">
         <h2 className="text-3xl font-bold capitalize">{page}</h2>
         {page === "conversation" && chatRoom && (
-          <LoaderWrapper loading={loading} className="p-0 inline">
-            <div className="flex items-center gap-2">
-              <Switch
-                defaultChecked={realtime}
-                onCheckedChange={onActivateRealtime}
-                className="data-[state=checked]:bg-orange-600 data-[state=unchecked]:bg-orange-200"
-              />
-              <Label htmlFor="realtime-mode">Realtime Mode</Label>
-            </div>
-          </LoaderWrapper>
+          <div className="flex items-center gap-2">
+            <Switch
+              defaultChecked={realtime}
+              onCheckedChange={onActivateRealtime}
+              className="data-[state=checked]:bg-orange-600 data-[state=unchecked]:bg-orange-200"
+            />
+            <Label htmlFor="realtime-mode">Realtime Mode</Label>
+          </div>
         )}
       </div>
 
