@@ -41,7 +41,6 @@ export const onGetConversationMode = async (id) => {
         live: true,
       },
     });
-    console.log(mode);
     return mode;
   } catch (error) {
     console.log(error);

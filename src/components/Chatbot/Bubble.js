@@ -57,7 +57,10 @@ const Bubble = ({ message, createdAt, size = "md", reverseView = false }) => {
             </p>
 
             <p>
-              {createdAt.getHours()}:{createdAt.getMinutes()}
+              {createdAt.getHours()}:
+              {createdAt.getMinutes() > 9
+                ? createdAt.getMinutes()
+                : `0${createdAt.getMinutes()}`}{" "}
               {createdAt.getHours() > 12 ? "PM" : "AM"}
             </p>
           </div>

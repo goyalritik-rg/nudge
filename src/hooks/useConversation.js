@@ -11,7 +11,7 @@ const useConversation = ({ activeTab = "" }) => {
     mode: "onChange",
   });
 
-  const { setLoading: loadMessages, setChats, setChatRoom } = useChatContext();
+  const { setChatRoom } = useChatContext();
 
   const [chatRooms, setChatRooms] = useState([]);
   const [loading, setLoading] = useState(false);
