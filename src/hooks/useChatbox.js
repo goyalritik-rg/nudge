@@ -1,51 +1,66 @@
+import { useEffect, useState } from "react";
 import { onViewUnReadMessages } from "@/actions/conversation";
 import { useChatContext } from "@/context/user-chat-context";
 import { getMonthName } from "@/lib/utils";
-import { useEffect, useState } from "react";
 
 const useChatbox = (createdAt, roomId) => {
   const { chatRoom } = useChatContext();
 
+  console.log("createdAt", createdAt);
+
   const [messageSentAt, setMessageSentAt] = useState("");
   const [urgent, setUrgent] = useState(false);
 
-  const onSetMessageRecievedDate = () => {
-    const dt = new Date(createdAt);
-    const current = new Date();
-    const currentDate = current.getDate();
-    const hr = dt.getHours();
-    const min = dt.getMinutes();
-    const date = dt.getDate();
-    const month = dt.getMonth();
-    const difference = currentDate - date;
+  useEffect(() => {
+    if (!createdAt) return;
 
-    if (difference <= 0) {
-      setMessageSentAt(`${hr}:${min}${hr > 12 ? "PM" : "AM"}`);
+    const messageDate = new Date(createdAt);
 
-      if (current.getHours() - dt.getHours() < 2) {
+    const now = new Date();
+
+    const isToday =
+      messageDate.getDate() === now.getDate() &&
+      messageDate.getMonth() === now.getMonth() &&
+      messageDate.getFullYear() === now.getFullYear();
+
+    if (isToday) {
+      // Format time to hh:mm AM/PM
+      const timeString = messageDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      setMessageSentAt(timeString);
+
+      const hoursAgo = (now - messageDate) / (1000 * 60 * 60); // hours
+      if (hoursAgo < 2) {
         setUrgent(true);
       }
     } else {
-      setMessageSentAt(`${date} ${getMonthName(month)}`);
+      console.log("messageDate.getMonth()", messageDate.getMonth());
+      setMessageSentAt(
+        `${messageDate.getDate()} ${
+          getMonthName(messageDate.getMonth())?.short_label
+        } ${messageDate.getFullYear()}`
+      );
     }
-  };
-
-  const onSeenChat = async () => {
-    if (chatRoom == roomId && urgent) {
-      await onViewUnReadMessages(roomId);
-      setUrgent(false);
-    }
-  };
+  }, [createdAt]);
 
   useEffect(() => {
-    onSeenChat();
-  }, [chatRoom]);
+    const markSeen = async () => {
+      if (chatRoom === roomId && urgent && roomId) {
+        try {
+          await onViewUnReadMessages(roomId);
+          setUrgent(false);
+        } catch (err) {
+          console.error("Failed to mark as seen:", err);
+        }
+      }
+    };
 
-  useEffect(() => {
-    onSetMessageRecievedDate();
-  }, []);
+    markSeen();
+  }, [chatRoom, urgent, roomId]);
 
-  return { messageSentAt, urgent, onSeenChat };
+  return { messageSentAt, urgent };
 };
 
 export default useChatbox;

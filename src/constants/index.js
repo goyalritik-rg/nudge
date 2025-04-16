@@ -8,63 +8,63 @@ const GLOBAL_CONSTANTS = {
   },
   constants: {
     months: {
-      1: {
-        key: 1,
+      0: {
+        key: 0,
         short_label: "Jan",
         label: "January",
       },
-      2: {
-        key: 2,
+      1: {
+        key: 1,
         short_label: "Feb",
         label: "February",
       },
-      3: {
-        key: 3,
+      2: {
+        key: 2,
         short_label: "Mar",
         label: "March",
       },
-      4: {
-        key: 4,
+      3: {
+        key: 3,
         short_label: "Apr",
         label: "April",
       },
-      5: {
-        key: 5,
+      4: {
+        key: 4,
         short_label: "May",
         label: "May",
       },
-      6: {
-        key: 6,
+      5: {
+        key: 5,
         short_label: "Jun",
         label: "June",
       },
-      7: {
-        key: 7,
+      6: {
+        key: 6,
         short_label: "Jul",
         label: "July",
       },
-      8: {
-        key: 8,
+      7: {
+        key: 7,
         short_label: "Aug",
         label: "August",
       },
-      9: {
-        key: 9,
+      8: {
+        key: 8,
         short_label: "Sep",
         label: "September",
       },
-      10: {
-        key: 10,
+      9: {
+        key: 9,
         short_label: "Oct",
         label: "October",
       },
-      11: {
-        key: 11,
+      10: {
+        key: 10,
         short_label: "Nov",
         label: "November",
       },
-      12: {
-        key: 12,
+      11: {
+        key: 11,
         short_label: "Dec",
         label: "December",
       },

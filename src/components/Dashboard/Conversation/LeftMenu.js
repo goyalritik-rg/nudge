@@ -30,7 +30,7 @@ const LeftMenu = ({ domains = [] }) => {
   });
 
   return (
-    <div className="w-[40%]">
+    <div className="w-[45%]">
       <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
         <TabsList className="gap-3">
           {TABS.map(({ label, value, icon: Icon }) => {

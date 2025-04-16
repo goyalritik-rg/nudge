@@ -46,7 +46,8 @@ const Bubble = ({ message, createdAt, size = "md" }) => {
             )}
           >
             <p>
-              {createdAt.getDate()} {getMonthName(createdAt.getMonth())}
+              {createdAt.getDate()}{" "}
+              {getMonthName(createdAt.getMonth())?.short_label}
             </p>
 
             <p>

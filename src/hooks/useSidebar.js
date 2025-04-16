@@ -21,10 +21,7 @@ const useSidebar = () => {
 
   const onActivateRealtime = async (e) => {
     try {
-      const realtime = await onToggleRealtime(
-        chatRoom,
-        e.target.ariaChecked == "true" ? false : true
-      );
+      const realtime = await onToggleRealtime(chatRoom, e);
 
       if (realtime) {
         setRealtime(realtime.chatRoom.live);
