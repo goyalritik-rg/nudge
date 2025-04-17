@@ -3,9 +3,15 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import useChatbox from "@/hooks/useChatbox";
+import { cn } from "@/lib/utils";
 import { ShieldAlert, User } from "lucide-react";
 
-const ChatCard = ({ roomData = {}, email = "", onClick = () => {} }) => {
+const ChatCard = ({
+  roomData = {},
+  email = "",
+  onClick = () => {},
+  activeRoom = false,
+}) => {
   const { id, message = [] } = roomData || {};
 
   const { createdAt, seen, message: description } = message?.[0] || {};
@@ -15,7 +21,10 @@ const ChatCard = ({ roomData = {}, email = "", onClick = () => {} }) => {
   return (
     <Card
       onClick={onClick}
-      className="rounded-lg border hover:bg-muted cursor-pointer transition duration-150 ease-in-out"
+      className={cn(
+        "rounded-lg border hover:bg-muted cursor-pointer transition duration-150 ease-in-out dark:bg-orange-50",
+        activeRoom === id && "bg-muted"
+      )}
     >
       <CardContent className="py-0 flex gap-3">
         <Avatar>

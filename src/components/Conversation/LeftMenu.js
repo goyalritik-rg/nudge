@@ -25,7 +25,13 @@ const TABS = [
 const LeftMenu = ({ domains = [] }) => {
   const [activeTab, setActiveTab] = useState("all");
 
-  const { chatRooms, loading, setChatRoom, register } = useConversation({
+  const {
+    chatRooms,
+    loading,
+    setChatRoom,
+    register,
+    chatRoom: activeRoom,
+  } = useConversation({
     activeTab,
   });
 
@@ -66,6 +72,7 @@ const LeftMenu = ({ domains = [] }) => {
                           roomData={roomData}
                           email={room?.email}
                           onClick={() => setChatRoom(roomData.id)}
+                          activeRoom={activeRoom}
                         />
                       );
                     })

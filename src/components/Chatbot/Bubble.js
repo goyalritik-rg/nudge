@@ -41,7 +41,7 @@ const Bubble = ({ message, createdAt, size = "md", reverseView = false }) => {
           "flex flex-col gap-3 min-w-[200px] max-w-[300px] p-4 rounded-t-md",
           message.role == key
             ? "bg-muted rounded-r-md"
-            : "bg-orange-50 rounded-l-md"
+            : "bg-orange-50 rounded-l-md dark:bg-orange-500"
         )}
       >
         {createdAt ? (

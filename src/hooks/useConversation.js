@@ -11,7 +11,7 @@ const useConversation = ({ activeTab = "" }) => {
     mode: "onChange",
   });
 
-  const { setChatRoom } = useChatContext();
+  const { setChatRoom, chatRoom } = useChatContext();
 
   const [chatRooms, setChatRooms] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -54,6 +54,7 @@ const useConversation = ({ activeTab = "" }) => {
     loading,
     setChatRoom,
     register,
+    chatRoom,
   };
 };
 
