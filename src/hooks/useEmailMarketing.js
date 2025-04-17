@@ -38,6 +38,7 @@ const useEmailMarketing = () => {
     register: registerEmail,
     formState: { errors: emailErrors },
     handleSubmit: SubmitEmail,
+    control: controlEmail = () => {},
     setValue,
   } = useForm({
     resolver: zodResolver(EmailMarketingBodySchema),
@@ -154,6 +155,7 @@ const useEmailMarketing = () => {
     editing,
     setValue,
     control,
+    controlEmail,
   };
 };
 

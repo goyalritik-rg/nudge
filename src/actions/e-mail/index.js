@@ -231,3 +231,22 @@ export const onBulkMailer = async (email = [], campaignId = "") => {
     console.log(error);
   }
 };
+
+export const onGetEmailTemplate = async (id) => {
+  try {
+    const template = await client.campaign.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        template: true,
+      },
+    });
+
+    if (template) {
+      return template.template;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

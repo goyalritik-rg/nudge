@@ -1,29 +1,36 @@
 import LoaderWrapper from "@/common/components/LoaderWrapper";
 import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
 import { PhoneCall, User } from "lucide-react";
-import { getMonthName } from "@/lib/utils";
-import { Modal } from "@uploadcare/file-uploader";
+import { cn, getMonthName } from "@/lib/utils";
 import Button from "@/common/components/Button";
+import Modal from "@/common/components/Modal";
+import { buttonVariants } from "../ui/button";
+import EditTemplate from "./EditTemplate";
 
 const ListCampaigns = ({
   campaign = [],
   campaignId = "",
   onSelectCampaign = () => {},
   processing = false,
+  onCreateEmailTemplate = () => {},
+  control = () => {},
+  setValue = () => {},
+  onBulkEmail = () => {},
+  errors = {},
 }) => {
   if (!campaign.length) {
-    return null;
+    return <h3>No Campaigns Found</h3>;
   }
 
   return (
-    <div className="flex flex-col items-end mt-5 gap-3">
+    <div className="flex flex-wrap gap-[1%] w-full">
       {campaign.length &&
         campaign.map((camp, i) => (
           <Card
             key={camp.id}
             className={cn(
-              "p-5 min-w-[600px] cursor-pointer",
-              campaignId == camp.id ? "bg-gray-50" : ""
+              "p-5 w-[49%] cursor-pointer",
+              campaignId == camp.id ? "bg-gray-100" : ""
             )}
             onClick={() => onSelectCampaign(camp.id)}
           >
@@ -54,9 +61,9 @@ const ListCampaigns = ({
 
                   <Modal>
                     <Modal.Trigger>
-                      <Card className="rounded-lg cursor-pointer bg-grandis py-2 px-5 font-semibold text-sm hover:bg-orange text-gray-700">
+                      <div className={buttonVariants({ variant: "outline" })}>
                         Edit Email
-                      </Card>
+                      </div>
                     </Modal.Trigger>
 
                     <Modal.Content>
@@ -65,15 +72,14 @@ const ListCampaigns = ({
                         description="This email will be sent to campaign members"
                       />
 
-                      <Modal.Body className="mt-0 mb-15">
-                        {/* <EditEmail
-                        register={registerEmail}
-                        errors={emailErrors}
-                        setDefault={setValue}
-                        id={camp.id}
-                        onCreate={onCreateEmailTemplate}
-                      /> */}
-                        Body
+                      <Modal.Body className="mt-0 mb-6">
+                        <EditTemplate
+                          control={control}
+                          errors={errors}
+                          setDefault={setValue}
+                          id={camp.id}
+                          onCreateEmailTemplate={onCreateEmailTemplate}
+                        />
                       </Modal.Body>
 
                       <Modal.Footer>
@@ -87,7 +93,7 @@ const ListCampaigns = ({
                             )
                           }
                         >
-                          Send
+                          Send Campaign
                         </Button>
                       </Modal.Footer>
                     </Modal.Content>

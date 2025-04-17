@@ -4,31 +4,24 @@ import React from "react";
 import { Card, CardDescription } from "../ui/card";
 import Modal from "@/common/components/Modal";
 import Layout from "@/common/form/Layout";
+import { buttonVariants } from "../ui/button";
 
 const CreateCampaign = ({
   control = () => {},
   errors = {},
-  onAddCustomersToCampaign = () => {},
-  isSelected = [],
   loading = false,
   subscription = {},
+  onCreateCampaign = () => {},
 }) => {
   return (
-    <div className="flex gap-3 justify-end">
-      <Button
-        disabled={isSelected.length == 0}
-        onClick={onAddCustomersToCampaign}
-      >
-        <Plus /> Add to campaign
-      </Button>
+    <div className="flex gap-8 justify-end w-full items-center">
+      <div className="font-bold">{subscription?.credits} credits left</div>
 
       <Modal>
         <Modal.Trigger>
-          <Card className="flex gap-2 items-center px-3 cursor-pointer text-sm">
-            <div>
-              <Plus /> Create Campaign
-            </div>
-          </Card>
+          <div className={buttonVariants({ variant: "outline" })}>
+            <Plus /> Create Campaign
+          </div>
         </Modal.Trigger>
 
         <Modal.Content>
@@ -53,18 +46,16 @@ const CreateCampaign = ({
           </Modal.Body>
 
           <Modal.Footer>
-            <Button className="w-full" loading={loading}>
+            <Button
+              className="w-full"
+              loading={loading}
+              onClick={onCreateCampaign}
+            >
               Create Campaign
             </Button>
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-
-      <Card className="p-2">
-        <CardDescription className="font-bold">
-          {subscription?.credits} credits
-        </CardDescription>
-      </Card>
     </div>
   );
 };

@@ -15,7 +15,7 @@ const Button = ({
   className,
   loading = false,
   children = null,
-  onClick = () => {},
+  onClick,
   ...props
 }) => {
   return (
@@ -32,7 +32,9 @@ const Button = ({
         if (loading || props.disabled) {
           return;
         }
-        onClick();
+        if (onClick && typeof onClick === "function") {
+          onClick();
+        }
       }}
     >
       <div

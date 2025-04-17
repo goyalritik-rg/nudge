@@ -25,36 +25,43 @@ const EmailMarketing = ({ campaign, domains, subscription }) => {
     onCreateEmailTemplate,
     setValue,
     control,
+    controlEmail,
   } = useEmailMarketing();
 
   return (
-    <div className="w-full flex flex-col items-start gap-20">
-      <div className="flex w-full items-start justify-between gap-10">
-        <CustomerTable
-          domains={domains}
-          onId={onSetAnswersId}
-          onSelect={onSelectedEmails}
-          select={isSelected}
-          id={isId}
-        />
+    <div className="w-full flex flex-col items-start">
+      <CreateCampaign
+        control={control}
+        errors={errors}
+        onAddCustomersToCampaign={onAddCustomersToCampaign}
+        isSelected={isSelected}
+        loading={loading}
+        subscription={subscription}
+        onCreateCampaign={onCreateCampaign}
+      />
 
-        <Separator orientation="vertical" />
-
-        <CreateCampaign
-          control={control}
-          errors={errors}
-          onAddCustomersToCampaign={onAddCustomersToCampaign}
-          isSelected={isSelected}
-          loading={loading}
-          subscription={subscription}
-        />
-      </div>
+      <Separator className="my-6" />
 
       <ListCampaigns
         campaign={campaign}
         campaignId={campaignId}
         onSelectCampaign={onSelectCampaign}
         processing={processing}
+        control={controlEmail}
+        errors={emailErrors}
+        onCreateEmailTemplate={onCreateEmailTemplate}
+        setValue={setValue}
+        onBulkEmail={onBulkEmail}
+      />
+
+      <Separator className="my-12" />
+
+      <CustomerTable
+        domains={domains}
+        onId={onSetAnswersId}
+        onSelect={onSelectedEmails}
+        select={isSelected}
+        id={isId}
       />
     </div>
   );
