@@ -39,6 +39,7 @@ const BotWindow = forwardRef(
       theme,
       help,
       values = {},
+      submitLoading = false,
     },
     ref
   ) => {
@@ -87,7 +88,6 @@ const BotWindow = forwardRef(
                   <Component
                     helpdesk={helpdesk}
                     chats={chats}
-                    containerRef={ref}
                     theme={theme}
                     textColor={textColor}
                     onResponding={onResponding}
@@ -95,6 +95,8 @@ const BotWindow = forwardRef(
                     control={control}
                     values={values}
                     realtimeMode={realtimeMode}
+                    ref={ref}
+                    submitLoading={submitLoading}
                   />
                 </div>
               </TabsContent>

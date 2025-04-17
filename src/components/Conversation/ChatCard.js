@@ -28,7 +28,7 @@ const ChatCard = ({ roomData = {}, email = "", onClick = () => {} }) => {
           <div>
             <div className="flex gap-5 items-center">
               <CardDescription className="font-bold leading-none text-gray-600">
-                {email}
+                {email || "No Email Given"}
               </CardDescription>
 
               {urgent && !seen && <ShieldAlert className="text-yellow-600" />}

@@ -6,8 +6,6 @@ import { clerkClient } from "@clerk/nextjs";
 import OpenAI from "openai";
 import { onMailer } from "../mailer";
 
-let customerEmail;
-
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_KEY,
 });
@@ -26,6 +24,159 @@ export const onStoreConversations = async (id, message, role) => {
       },
     },
   });
+};
+
+export const getMessagesForChatRoom = async ({ chatRoomId }) => {
+  const chatRoomWithMessages = await client.chatRoom.findUnique({
+    where: {
+      id: chatRoomId,
+    },
+    select: {
+      id: true,
+      live: true,
+      message: {
+        select: {
+          id: true,
+          message: true,
+          role: true,
+          createdAt: true, // include timestamps if needed
+        },
+        orderBy: {
+          createdAt: "asc", // or 'desc' if you want latest first
+        },
+      },
+    },
+  });
+
+  return chatRoomWithMessages;
+};
+
+export const createCustomer = async ({ domain_id, customer_id }) => {
+  const chatBotDomain = await client.domain.findUnique({
+    where: {
+      id: domain_id,
+    },
+    select: {
+      name: true,
+      filterQuestions: {
+        where: {
+          answered: null,
+        },
+        select: {
+          question: true,
+        },
+      },
+    },
+  });
+
+  if (!chatBotDomain) {
+    return {
+      status: 400,
+      message: "Something went wrong!",
+    };
+  }
+
+  const customerMade = await client.domain.update({
+    where: {
+      id: domain_id,
+    },
+    data: {
+      customer: {
+        create: {
+          id: customer_id,
+          questions: {
+            create: chatBotDomain.filterQuestions,
+          },
+          chatRoom: {
+            create: {}, // creates an empty chatRoom
+          },
+        },
+      },
+    },
+    select: {
+      customer: {
+        select: {
+          id: true,
+          email: true,
+          questions: true,
+          chatRoom: {
+            select: {
+              id: true,
+              live: true,
+              mailed: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!customerMade) {
+    return null;
+  }
+
+  const newCustomer = await client.customer.findUnique({
+    where: {
+      id: customer_id,
+    },
+    select: {
+      id: true,
+      email: true,
+      questions: true,
+      chatRoom: {
+        select: {
+          id: true,
+          live: true,
+          mailed: true,
+        },
+      },
+    },
+  });
+
+  if (newCustomer) {
+    console.log("New customer made");
+
+    console.log("newCustomernewCustomer", newCustomer);
+
+    const response = {
+      role: "assistant",
+      content: `Welcome aboard! I'm glad to connect with you. Is there anything you need help with?`,
+      chatRoomId: newCustomer?.chatRoom?.[0]?.id,
+    };
+
+    return response;
+  }
+
+  return {
+    status: 400,
+    message: "Something went wrong!",
+  };
+};
+
+export const getChatRoom = async ({ customer_id }) => {
+  try {
+    const customerData = await client.customer.findUnique({
+      where: {
+        id: customer_id,
+      },
+      select: {
+        id: true,
+        email: true,
+        questions: true,
+        chatRoom: {
+          select: {
+            id: true,
+            live: true,
+            mailed: true,
+          },
+        },
+      },
+    });
+
+    return customerData?.chatRoom?.[0];
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const onGetCurrentChatBot = async (id) => {
@@ -58,16 +209,113 @@ export const onGetCurrentChatBot = async (id) => {
   }
 };
 
-export const onAiChatBotAssistant = async (
-  id = "",
+export const sendEmail = async ({ domain_id, customer_id } = {}) => {
+  try {
+    const checkCustomer = await client.domain.findUnique({
+      where: {
+        id: domain_id,
+      },
+      select: {
+        User: {
+          select: {
+            clerkId: true,
+          },
+        },
+        name: true,
+        customer: {
+          where: {
+            id: customer_id,
+          },
+          select: {
+            id: true,
+            email: true,
+            questions: true,
+            chatRoom: {
+              select: {
+                id: true,
+                live: true,
+                mailed: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const user = await clerkClient.users.getUser(checkCustomer.User?.clerkId);
+
+    onMailer(user.emailAddresses[0].emailAddress);
+
+    console.log("Email Sent");
+
+    //update mail status to prevent spamming
+    const mailed = await client.chatRoom.update({
+      where: {
+        id: checkCustomer.customer[0].chatRoom[0].id,
+      },
+      data: {
+        mailed: true,
+      },
+    });
+
+    console.log("MAILED");
+
+    if (mailed) {
+      return {
+        live: true,
+        chatRoom: checkCustomer.customer[0].chatRoom[0].id,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getChatGPTMessage = async (
+  domain_id = "",
+  customer_id = "",
   chat = [],
-  author = "",
   message = ""
 ) => {
   try {
+    const extractedEmail = extractEmailsFromString(message);
+
+    if (extractedEmail) {
+      const emailUpdated = await client.customer.update({
+        where: {
+          id: customer_id,
+        },
+        data: {
+          email: extractedEmail[0],
+        },
+      });
+
+      if (emailUpdated) {
+        console.log("Email Updated");
+      }
+    }
+
+    const customerData = await client.customer.findUnique({
+      where: {
+        id: customer_id,
+      },
+      select: {
+        id: true,
+        email: true,
+        questions: true,
+        chatRoom: {
+          select: {
+            id: true,
+            live: true,
+            mailed: true,
+          },
+        },
+      },
+    });
+
     const chatBotDomain = await client.domain.findUnique({
       where: {
-        id,
+        id: domain_id,
       },
       select: {
         name: true,
@@ -82,142 +330,13 @@ export const onAiChatBotAssistant = async (
       },
     });
 
-    if (!chatBotDomain) {
-      return {
-        status: 400,
-        message: "Something went wrong!",
-      };
+    if (!customerData || !chatBotDomain) {
+      return null;
     }
 
-    const extractedEmail = extractEmailsFromString(message);
+    const { chatRoom = [], email = "" } = customerData;
 
-    if (extractedEmail) {
-      customerEmail = extractedEmail[0];
-    }
-
-    if (customerEmail) {
-      const checkCustomer = await client.domain.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          User: {
-            select: {
-              clerkId: true,
-            },
-          },
-          name: true,
-          customer: {
-            where: {
-              email: {
-                startsWith: customerEmail,
-              },
-            },
-            select: {
-              id: true,
-              email: true,
-              questions: true,
-              chatRoom: {
-                select: {
-                  id: true,
-                  live: true,
-                  mailed: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (checkCustomer && !checkCustomer.customer?.length) {
-        const newCustomer = await client.domain.update({
-          where: {
-            id,
-          },
-          data: {
-            customer: {
-              create: {
-                email: customerEmail,
-                questions: {
-                  create: chatBotDomain.filterQuestions,
-                },
-                chatRoom: {
-                  create: {},
-                },
-              },
-            },
-          },
-        });
-
-        if (newCustomer) {
-          console.log("New customer made");
-
-          const response = {
-            role: "assistant",
-            content: `Welcome aboard ${
-              customerEmail.split("@")[0]
-            }! I'm glad to connect with you. Is there anything you need help with?`,
-          };
-
-          return { response };
-        }
-      }
-
-      if (checkCustomer && checkCustomer.customer[0]?.chatRoom?.[0]?.live) {
-        await onStoreConversations(
-          checkCustomer?.customer[0].chatRoom[0].id,
-          message,
-          author
-        );
-
-        // onRealTimeChat(
-        //   checkCustomer.customer[0].chatRoom[0].id,
-        //   message,
-        //   "user",
-        //   author
-        // );
-
-        if (!checkCustomer.customer[0]?.chatRoom?.[0]?.mailed) {
-          const user = await clerkClient.users.getUser(
-            checkCustomer.User?.clerkId
-          );
-
-          onMailer(user.emailAddresses[0].emailAddress);
-
-          console.log("Email Sent");
-
-          //update mail status to prevent spamming
-          const mailed = await client.chatRoom.update({
-            where: {
-              id: checkCustomer.customer[0].chatRoom[0].id,
-            },
-            data: {
-              mailed: true,
-            },
-          });
-
-          console.log("MAILED");
-
-          if (mailed) {
-            return {
-              live: true,
-              chatRoom: checkCustomer.customer[0].chatRoom[0].id,
-            };
-          }
-        }
-
-        return {
-          live: true,
-          chatRoom: checkCustomer.customer[0].chatRoom[0].id,
-        };
-      }
-
-      await onStoreConversations(
-        checkCustomer?.customer[0].chatRoom[0].id,
-        message,
-        author
-      );
-
+    if (email) {
       const chatCompletion = await openai.chat.completions.create({
         messages: [
           {
@@ -243,11 +362,11 @@ export const onAiChatBotAssistant = async (
   
                 if the customer agrees to book an appointment send them this link ${
                   process.env.NEXT_PUBLIC_BASE_API_URL
-                }/portal/${id}/appointment/${checkCustomer?.customer[0].id}
+                }/portal/${domain_id}/appointment/${customer_id}
   
                 if the customer wants to buy a product redirect them to the payment page ${
                   process.env.NEXT_PUBLIC_BASE_API_URL
-                }/${id}/payment/${checkCustomer?.customer[0].id}
+                }/${domain_id}/payment/${customer_id}
             `,
           },
           ...(chat || {}),
@@ -265,7 +384,7 @@ export const onAiChatBotAssistant = async (
 
         const realtime = await client.chatRoom.update({
           where: {
-            id: checkCustomer?.customer[0].chatRoom[0].id,
+            id: chatRoom[0].id,
           },
           data: {
             live: true,
@@ -281,13 +400,7 @@ export const onAiChatBotAssistant = async (
             ),
           };
 
-          await onStoreConversations(
-            checkCustomer?.customer[0].chatRoom[0].id,
-            response.content,
-            "assistant"
-          );
-
-          return { response };
+          return response;
         }
       }
 
@@ -295,7 +408,7 @@ export const onAiChatBotAssistant = async (
         const firstUnansweredQuestion =
           await client.customerResponses.findFirst({
             where: {
-              customerId: checkCustomer?.customer[0].id,
+              customerId: customer_id,
               answered: null,
             },
             select: {
@@ -334,13 +447,7 @@ export const onAiChatBotAssistant = async (
             link: link.slice(0, -1),
           };
 
-          await onStoreConversations(
-            checkCustomer?.customer[0].chatRoom[0].id,
-            `${response.content} ${response.link}`,
-            "assistant"
-          );
-
-          return { response };
+          return response;
         }
 
         const response = {
@@ -348,13 +455,7 @@ export const onAiChatBotAssistant = async (
           content: chatCompletion.choices[0].message.content,
         };
 
-        await onStoreConversations(
-          checkCustomer?.customer[0].chatRoom[0].id,
-          `${response.content}`,
-          "assistant"
-        );
-
-        return { response };
+        return response;
       }
     }
 
@@ -387,8 +488,10 @@ export const onAiChatBotAssistant = async (
         content: chatCompletion.choices[0].message.content,
       };
 
-      return { response };
+      return response;
     }
+
+    return null;
   } catch (error) {
     console.log(error);
   }

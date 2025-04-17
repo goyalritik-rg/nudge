@@ -22,6 +22,7 @@ const Chatbot = () => {
     errors,
     control,
     values = {},
+    submitLoading = false,
   } = useChatBot();
 
   useEffect(() => {
@@ -31,6 +32,10 @@ const Chatbot = () => {
       target.style.setProperty("background-color", "transparent", "important");
     }
   }, []);
+
+  if (!currentBot) {
+    return null;
+  }
 
   return (
     <div className="h-screen flex flex-col justify-end items-end gap-4">
@@ -51,6 +56,7 @@ const Chatbot = () => {
           onResponding={onAiTyping}
           control={control}
           values={values}
+          submitLoading={submitLoading}
         />
       )}
 

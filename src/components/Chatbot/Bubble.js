@@ -83,7 +83,7 @@ const Bubble = ({ message, createdAt, size = "md", reverseView = false }) => {
           </div>
         ) : (
           <p className={cn("text-sm", size === "sm" && "text-[12px]")}>
-            {message.content.replace("(complete)", " ")}
+            {message.content?.replace("(complete)", " ")}
 
             {message.link && (
               <Link

@@ -5,18 +5,23 @@ import { SendHorizonal } from "lucide-react";
 import { toast } from "sonner";
 import Responding from "./Responding";
 import { cn } from "@/lib/utils";
+import { forwardRef } from "react";
+import Loader from "@/common/components/Loader";
 
-const ChatBox = ({
-  chats = [],
-  containerRef,
-  theme,
-  textColor,
-  onResponding = false,
-  onChat = () => {},
-  values = {},
-  control = () => {},
-  realtimeMode = {},
-}) => {
+const ChatBox = (
+  {
+    chats = [],
+    theme,
+    textColor,
+    onResponding = false,
+    onChat = () => {},
+    values = {},
+    control = () => {},
+    submitLoading = false,
+    realtimeMode = {},
+  },
+  ref
+) => {
   const lastChat = chats?.[chats?.length - 1];
 
   function RenderLoading() {
@@ -49,7 +54,7 @@ const ChatBox = ({
             color: textColor || "",
           }}
           className="flex h-[450px] flex-col py-5 gap-3 chat-window overflow-y-auto pb-[85px]"
-          ref={containerRef}
+          ref={ref}
         >
           {chats?.map((chat, key) => (
             <Bubble
@@ -67,24 +72,29 @@ const ChatBox = ({
           <InputController
             control={control}
             name="content"
+            disabled={submitLoading}
             placeholder="Type your message..."
             className="focus-visible:ring-0 py-4 focus-visible:ring-offset-0 bg-muted rounded-none outline-none border-none h-18 w-[95%] pl-4 text-sm"
           />
 
-          <SendHorizonal
-            onClick={() => {
-              if (!values?.content) {
-                toast.error("Message cannot be empty");
-                return;
-              }
-              onChat();
-            }}
-            className={cn("cursor-pointer text-accent-foreground")}
-          />
+          {submitLoading ? (
+            <Loader />
+          ) : (
+            <SendHorizonal
+              onClick={() => {
+                if (!values?.content) {
+                  toast.error("Message cannot be empty");
+                  return;
+                }
+                onChat();
+              }}
+              className={cn("cursor-pointer text-accent-foreground")}
+            />
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default ChatBox;
+export default forwardRef(ChatBox);

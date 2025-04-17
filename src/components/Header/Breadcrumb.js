@@ -15,7 +15,8 @@ const BreadCrumb = () => {
         {page === "conversation" && chatRoom && (
           <div className="flex items-center gap-2">
             <Switch
-              defaultChecked={realtime}
+              key={realtime}
+              checked={realtime}
               onCheckedChange={onActivateRealtime}
               className="data-[state=checked]:bg-orange-600 data-[state=unchecked]:bg-orange-200"
             />
