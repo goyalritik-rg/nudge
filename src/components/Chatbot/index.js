@@ -32,6 +32,7 @@ const Chatbot = () => {
       target.style.setProperty("background-color", "transparent", "important");
     }
   }, []);
+  console.log("currentBotcurrentBot", currentBot);
 
   if (!currentBot) {
     return null;
