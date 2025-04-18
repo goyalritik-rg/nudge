@@ -75,7 +75,7 @@ const LeftMenu = ({ domains = [] }) => {
                   value={selectedDomain}
                 />
 
-                <div className="mt-8 flex flex-col gap-3">
+                <div className="mt-8 flex flex-col gap-3 overflow-y-auto max-h-[calc(100dvh-250px)] -mr-5 pr-5 chat-window">
                   {chatRooms.length ? (
                     chatRooms.map((room, index) => {
                       const roomData = room.chatRoom?.[0];
