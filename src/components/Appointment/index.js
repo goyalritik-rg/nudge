@@ -34,7 +34,7 @@ const Appointment = async () => {
     <div className="flex flex-col p-4 mb-10 w-full">
       <Header />
 
-      <div className="flex flex-col items-start w-full justify-between lg:flex-row">
+      <div className="flex flex-col-reverse items-start w-full justify-between lg:flex-row">
         <div className="w-full lg:w-[52%]">
           <Section
             label="Appointments Overview"
@@ -44,6 +44,8 @@ const Appointment = async () => {
 
           <AllAppointments bookings={bookings} />
         </div>
+
+        <Separator orientation="horizontal" className="my-10 flex lg:hidden" />
 
         <div className="w-full lg:w-[38%]">
           <Section
