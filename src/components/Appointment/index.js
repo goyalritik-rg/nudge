@@ -6,6 +6,7 @@ import { Card, CardContent } from "../ui/card";
 import Separator from "@/common/components/Separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import AllAppointments from "./AllAppointments";
+import { formatAMPM } from "@/lib/utils";
 
 const today = new Date();
 
@@ -70,10 +71,7 @@ const Appointment = async () => {
                       <p className="text-sm">
                         Created On
                         <br />
-                        {booking.createdAt.getHours()}
-                        {":"}
-                        {booking.createdAt.getMinutes()}{" "}
-                        {booking.createdAt.getHours() > 12 ? "PM" : "AM"}
+                        {formatAMPM(booking.createdAt)}
                       </p>
 
                       <p className="text-sm">

@@ -1,6 +1,6 @@
 import DataTable from "@/common/components/Table";
 import { TableCell, TableRow } from "../ui/table";
-import { getMonthName } from "@/lib/utils";
+import { formatAMPM, getMonthName } from "@/lib/utils";
 
 const APPOINTMENT_TABLE_HEADER = [
   "Email",
@@ -38,12 +38,7 @@ const AllAppointments = ({ bookings = [] }) => {
               {booking.createdAt.getDate()} {booking.createdAt.getFullYear()}
             </div>
 
-            <div>
-              {getHour(booking.createdAt.getHours())}
-              {":"}
-              {booking.createdAt.getMinutes()}
-              {booking.createdAt.getHours() > 12 ? "PM" : "AM"}
-            </div>
+            <div>{formatAMPM(booking.createdAt)}</div>
           </TableCell>
 
           <TableCell className="text-right">
