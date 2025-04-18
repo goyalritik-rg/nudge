@@ -1,13 +1,20 @@
-import Image from "next/image";
+import { cn } from "@/lib/utils";
+const sizeClass = {
+  sm: "md",
+  md: "lg",
+  lg: "2xl",
+};
 
-const Banner = ({ width = 100 }) => {
+const Banner = ({ size = "md" }) => {
   return (
-    <img
-      src="/images/logo.png"
-      alt="Nudge"
-      width={100}
-      className="object-cover"
-    />
+    <div
+      className={cn(
+        "uppercase text-orange-400 font-bold text-lg",
+        sizeClass[size]
+      )}
+    >
+      Nudge
+    </div>
   );
 };
 
