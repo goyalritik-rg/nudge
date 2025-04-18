@@ -29,7 +29,7 @@ const getCodeSnippet = ({ id = "", tech }) => {
                 width: window.innerWidth,
                 height: window.innerHeight,
                 }),
-                "${process.env.NEXT_PUBLIC_BASE_API_URL}"
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}/"
             );
     };
     
@@ -76,7 +76,7 @@ const getCodeSnippet = ({ id = "", tech }) => {
                 width: window.innerWidth,
                 height: window.innerHeight,
                 }),
-                "${process.env.NEXT_PUBLIC_BASE_API_URL}"
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}/"
             );
         };
 
@@ -89,7 +89,7 @@ const getCodeSnippet = ({ id = "", tech }) => {
                 iframe.height = dimensions.height;
                 iframe.contentWindow.postMessage(
                 "${id}",
-                "${process.env.NEXT_PUBLIC_BASE_API_URL}"
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}/"
                 );
             } catch (err) {
                 console.error("Invalid message data", err);
