@@ -204,7 +204,7 @@ const useChatBot = () => {
     postToParent(
       JSON.stringify({
         width: botOpened ? (width > 440 ? 440 : "90%") : 80,
-        height: botOpened ? 0.95 * Number(height) : 80,
+        height: botOpened ? 0.95 * height : 80,
       })
     );
   }, [botOpened, dimensions]);

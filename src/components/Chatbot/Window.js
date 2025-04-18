@@ -48,7 +48,7 @@ const BotWindow = forwardRef(
 
     return (
       <div
-        style={{ height: Number(height) - 80 }}
+        style={{ height: height - 80 }}
         className="w-[100%] flex flex-col bg-white rounded-xl border-[1px] overflow-hidden relative p-4"
       >
         <div className="flex gap-2">

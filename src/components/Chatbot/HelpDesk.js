@@ -13,7 +13,7 @@ const HelpDesk = ({ helpdesk = [], dimensions = {} }) => {
   return (
     <div
       className="overflow-y-auto overflow-x-hidden flex flex-col gap-4 -mx-4 px-4 pb-10 chat-window"
-      style={{ height: Number(height) - 340 }}
+      style={{ height: height - 340 }}
     >
       <div>
         <CardTitle>Help Desk</CardTitle>
