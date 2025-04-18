@@ -46,7 +46,7 @@ const ChatBox = (
       );
     }
 
-    if (onResponding) {
+    if (onResponding || submitLoading) {
       return <Responding />;
     }
 
@@ -89,20 +89,16 @@ const ChatBox = (
             className="focus-visible:ring-0 py-4 focus-visible:ring-offset-0 bg-muted rounded-none outline-none border-none h-16 w-[95%] pl-4 text-sm"
           />
 
-          {submitLoading ? (
-            <Loader />
-          ) : (
-            <SendHorizonal
-              onClick={() => {
-                if (!values?.content) {
-                  toast.error("Message cannot be empty");
-                  return;
-                }
-                onChat();
-              }}
-              className={cn("cursor-pointer text-accent-foreground")}
-            />
-          )}
+          <SendHorizonal
+            onClick={() => {
+              if (!values?.content) {
+                toast.error("Message cannot be empty");
+                return;
+              }
+              onChat();
+            }}
+            className={cn("cursor-pointer text-accent-foreground")}
+          />
         </div>
       </div>
     </div>

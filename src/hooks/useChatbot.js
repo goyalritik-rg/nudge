@@ -29,18 +29,17 @@ const useChatBot = () => {
   const values = watch();
 
   const limitRequest = useRef(0);
-  const [dimensions, setDimensions] = useState({});
-
   const messageWindowRef = useRef(null);
 
+  const [dimensions, setDimensions] = useState({});
   const [currentBot, setCurrentBot] = useState();
   const [botOpened, setBotOpened] = useState(false);
   const [loading, setLoading] = useState(true);
   const [onChats, setOnChats] = useState([]);
   const [onAiTyping, setOnAiTyping] = useState(false);
+  const [initializingChat, setInitializingChat] = useState(false);
   const [currentBotId, setCurrentBotId] = useState();
   const [onRealTime, setOnRealTime] = useState(undefined);
-
   const [customerID, setCustomerID] = useState("");
   const [firstChat, setFirstChat] = useState({});
   const [chatRoomId, setChatRoomId] = useState("");
@@ -66,26 +65,21 @@ const useChatBot = () => {
         role: "assistant",
         content: chatbot.chatBot?.welcomeMessage,
       };
+
       setFirstChat(temp);
-
       setOnChats([temp]);
-
       setCurrentBot(chatbot);
       setLoading(false);
     }
   };
 
-  const fetchAllMessages = async ({ initial = false } = {}) => {
-    if (!chatRoomId || !botOpened) {
-      return;
-    }
+  const fetchAllMessages = async () => {
+    if (!chatRoomId || !botOpened) return;
 
     try {
       const messagesData = await getMessagesForChatRoom({ chatRoomId });
 
-      if (!messagesData) {
-        return;
-      }
+      if (!messagesData) return;
 
       const { message: allMessages, live = false } = messagesData;
 
@@ -96,7 +90,10 @@ const useChatBot = () => {
 
       if (allMessages) {
         setOnChats(
-          allMessages.map((e) => ({ role: e.role, content: e.message }))
+          allMessages.map((e) => ({
+            role: e.role,
+            content: e.message,
+          }))
         );
       }
     } catch (error) {
@@ -105,87 +102,90 @@ const useChatBot = () => {
   };
 
   const onSendMessage = handleSubmit(async ({ content: message = "" } = {}) => {
+    if (!message) return;
+
+    setSubmitLoading(true);
+    setOnChats((prev) => [...prev, { role: "user", content: message }]);
+    reset();
+
     try {
-      if (!message) {
-        return;
-      }
-
-      setSubmitLoading(true);
-
       const chatRoomExists = await getChatRoom({ customer_id: customerID });
 
       if (!chatRoomExists) {
+        setInitializingChat(true);
+
         const newCustomer = await createCustomer({
           domain_id: currentBotId,
           customer_id: customerID,
         });
 
         const newRoomId = newCustomer?.chatRoomId;
-
         setChatRoomId(newRoomId);
 
-        await onStoreConversations(
-          newRoomId,
-          firstChat.content,
-          firstChat.role
-        );
-        await onStoreConversations(newRoomId, message, "user");
-        await onStoreConversations(
-          newRoomId,
-          newCustomer.content,
-          newCustomer.role
-        );
-        fetchAllMessages();
-        setSubmitLoading(false);
+        await Promise.all([
+          onStoreConversations(newRoomId, firstChat.content, firstChat.role),
+          onStoreConversations(newRoomId, message, "user"),
+          onStoreConversations(
+            newRoomId,
+            newCustomer.content,
+            newCustomer.role
+          ),
+        ]);
+
         reset();
-      } else {
-        await onStoreConversations(chatRoomExists?.id, message, "user");
+        setInitializingChat(false);
         fetchAllMessages();
-        setSubmitLoading(false);
-        reset();
-
-        if (chatRoomExists.live) {
-          setOnRealTime((prev) => ({
-            ...prev,
-            chatroom: chatRoomExists,
-            mode: chatRoomExists.live,
-          }));
-
-          if (!chatRoomExists.mailed) {
-            const emailSent = await sendEmail({
-              domain_id: currentBotId,
-              customer_id: customerID,
-            });
-
-            if (emailSent) {
-              console.log("Email Sent");
-            }
-          }
-
-          return;
-        }
-
-        setOnAiTyping(true);
-
-        const gptResponse = await getChatGPTMessage(
-          currentBotId,
-          customerID,
-          onChats,
-          message
-        );
-
-        if (gptResponse) {
-          await onStoreConversations(
-            chatRoomExists?.id,
-            `${gptResponse.content} ${gptResponse.link || ""}`,
-            gptResponse.role
-          );
-
-          setOnAiTyping(false);
-
-          fetchAllMessages();
-        }
+        return;
       }
+
+      await onStoreConversations(chatRoomExists.id, message, "user");
+      fetchAllMessages();
+      reset();
+
+      if (chatRoomExists.live) {
+        setOnRealTime({
+          chatroom: chatRoomExists,
+          mode: chatRoomExists.live,
+        });
+
+        if (!chatRoomExists.mailed) {
+          const emailSent = await sendEmail({
+            domain_id: currentBotId,
+            customer_id: customerID,
+          });
+
+          if (emailSent) {
+            console.log("Email Sent");
+          }
+        }
+
+        fetchAllMessages();
+        reset();
+        return;
+      }
+
+      setOnAiTyping(true);
+
+      const gptResponse = await getChatGPTMessage(
+        currentBotId,
+        customerID,
+        onChats,
+        message
+      );
+
+      if (gptResponse) {
+        const cleanContent = gptResponse.link
+          ? `${gptResponse.content} ${gptResponse.link}`
+          : gptResponse.content;
+
+        await onStoreConversations(
+          chatRoomExists?.id,
+          cleanContent,
+          gptResponse.role
+        );
+      }
+
+      fetchAllMessages();
     } catch (error) {
       console.log(error);
     } finally {
@@ -213,7 +213,7 @@ const useChatBot = () => {
     window.addEventListener("message", (e) => {
       const botid = e.data;
 
-      if (limitRequest.current < 1 && typeof botid == "string") {
+      if (limitRequest.current < 1 && typeof botid === "string") {
         onGetDomainChatBot(botid);
         limitRequest.current++;
       }
@@ -224,10 +224,9 @@ const useChatBot = () => {
     const handleMessage = (e) => {
       try {
         const data = JSON.parse(e.data);
-
         const { type, ...rest } = data || {};
 
-        if (data.type === "DEVICE_INFO") {
+        if (type === "DEVICE_INFO") {
           setDimensions(rest);
         }
       } catch (err) {
@@ -255,15 +254,12 @@ const useChatBot = () => {
   }, []);
 
   useEffect(() => {
-    if (!customerID) {
-      return;
-    }
+    if (!customerID) return;
 
     const fetchChatRoom = async () => {
       const room = await getChatRoom({ customer_id: customerID });
-
       if (room) {
-        setChatRoomId(room?.id);
+        setChatRoomId(room.id);
       }
     };
 
@@ -288,7 +284,6 @@ const useChatBot = () => {
     onStartChatting: onSendMessage,
     onChats,
     register,
-    // onAiTyping,
     messageWindowRef,
     currentBot,
     loading,
@@ -300,6 +295,7 @@ const useChatBot = () => {
     submitLoading,
     onAiTyping,
     dimensions,
+    initializingChat, // <-- Use this in UI
   };
 };
 
