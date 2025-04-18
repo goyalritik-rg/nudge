@@ -49,6 +49,8 @@ const LeftMenu = ({ domains = [] }) => {
     setSelectedDomain(domainId);
   }, [domainId]);
 
+  console.log("hello");
+
   return (
     <div className="w-[45%]">
       <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
