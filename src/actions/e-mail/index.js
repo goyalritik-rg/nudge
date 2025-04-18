@@ -4,134 +4,137 @@ import { client } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
 import nodemailer from "nodemailer";
 
-export const onGetAllCustomers = async (id) => {
+export const onGetUserSubscription = async () => {
   try {
-    const customers = await client.user.findUnique({
+    const user = await currentUser();
+    if (!user) return null;
+
+    const userData = await client.user.findUnique({
       where: {
-        clerkId: id,
+        clerkId: user.id,
       },
       select: {
         subscription: {
           select: {
-            credits: true,
             plan: true,
-          },
-        },
-        domains: {
-          select: {
-            customer: {
-              select: {
-                id: true,
-                email: true,
-                Domain: {
-                  select: {
-                    name: true,
-                  },
-                },
-              },
-            },
+            credits: true, // include this if you want to show remaining credits
           },
         },
       },
     });
 
-    if (customers) {
-      return customers;
-    }
-  } catch (error) {}
-};
-
-export const onGetAllCampaigns = async (id) => {
-  try {
-    const campaigns = await client.user.findUnique({
-      where: {
-        clerkId: id,
-      },
-      select: {
-        campaign: {
-          select: {
-            name: true,
-            id: true,
-            customers: true,
-            createdAt: true,
-          },
-        },
-      },
-    });
-
-    if (campaigns) {
-      return campaigns;
-    }
+    return userData?.subscription;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching user subscription:", error);
+    return null;
   }
 };
 
-export const onGetAllCustomerResponses = async (id) => {
+export const onGetAllCampaigns = async ({ domainId } = {}) => {
+  if (!domainId) return null;
+
   try {
-    const user = await currentUser();
-
-    if (!user) return null;
-
-    const answers = await client.user.findUnique({
+    const campaigns = await client.campaign.findMany({
       where: {
-        clerkId: user.id,
-      },
-      select: {
-        domains: {
-          select: {
-            customer: {
-              select: {
-                questions: {
-                  where: {
-                    customerId: id,
-                    answered: {
-                      not: null,
-                    },
-                  },
-                  select: {
-                    question: true,
-                    answered: true,
-                  },
-                },
-              },
-            },
+        domain: {
+          some: {
+            id: domainId,
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        customers: true,
+        createdAt: true,
+        template: true,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
-    if (answers) {
-      return answers.domains;
-    }
+    return campaigns;
   } catch (error) {
     console.log(error);
+    return null;
   }
 };
 
-export const onCreateMarketingCampaign = async (name) => {
+export const onGetDomainCustomers = async ({ domainId }) => {
+  if (!domainId) return null;
+
+  try {
+    const customers = await client.customer.findMany({
+      where: {
+        domainId,
+        email: {
+          not: null,
+        },
+      },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    return customers;
+  } catch (error) {
+    console.error("Error fetching domain customers:", error);
+    return null;
+  }
+};
+
+export const onGetAllCustomerResponses = async ({ customerId }) => {
+  try {
+    const answers = await client.customerResponses.findMany({
+      where: {
+        customerId,
+        answered: {
+          not: null,
+        },
+      },
+      select: {
+        question: true,
+        answered: true,
+      },
+    });
+
+    return answers;
+  } catch (error) {
+    console.error("Error fetching customer responses:", error);
+    return null;
+  }
+};
+export const onCreateMarketingCampaign = async ({ name, domainId }) => {
   try {
     const user = await currentUser();
-    if (!user) return null;
 
-    const campaign = await client.user.update({
-      where: {
-        clerkId: user.id,
-      },
+    if (!user || !domainId) return null;
+
+    await client.campaign.create({
       data: {
-        campaign: {
-          create: {
-            name,
+        name,
+        User: {
+          connect: {
+            clerkId: user.id,
+          },
+        },
+        domain: {
+          connect: {
+            id: domainId,
           },
         },
       },
     });
 
-    if (campaign) {
-      return { status: 200, message: "You campaign was created" };
-    }
+    return {
+      status: 200,
+      message: "New campaign has been created and linked to the domain.",
+    };
   } catch (error) {
-    console.log(error);
+    console.error("Error creating campaign:", error);
+    return { status: 500, message: "Failed to create campaign." };
   }
 };
 
@@ -146,7 +149,7 @@ export const onSaveEmailTemplate = async (template, campainId) => {
       },
     });
 
-    return { status: 200, message: "Email template created" };
+    return { status: 200, message: "Email template updated" };
   } catch (error) {
     console.log(error);
   }
@@ -223,28 +226,10 @@ export const onBulkMailer = async (email = [], campaignId = "") => {
           },
         },
       });
+
       if (creditsUsed) {
         return { status: 200, message: "Campaign emails sent" };
       }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const onGetEmailTemplate = async (id) => {
-  try {
-    const template = await client.campaign.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        template: true,
-      },
-    });
-
-    if (template) {
-      return template.template;
     }
   } catch (error) {
     console.log(error);

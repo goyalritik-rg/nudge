@@ -1,9 +1,9 @@
 import LoaderWrapper from "@/common/components/LoaderWrapper";
 import { CardDescription } from "../ui/card";
-import { useAnswers } from "@/hooks/useAnswers";
+import useAnswers from "@/hooks/useAnswers";
 
-const Answers = ({ id }) => {
-  const { answers, loading } = useAnswers(id);
+const Answers = ({ customerId }) => {
+  const { answers, loading } = useAnswers({ customerId });
 
   return (
     <div className="flex flex-col gap-5 p-4">

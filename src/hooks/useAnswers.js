@@ -1,7 +1,7 @@
 import { onGetAllCustomerResponses } from "@/actions/e-mail";
 import { useEffect, useState } from "react";
 
-export const useAnswers = (id) => {
+const useAnswers = ({ customerId }) => {
   const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -9,7 +9,7 @@ export const useAnswers = (id) => {
     try {
       setLoading(true);
 
-      const answer = await onGetAllCustomerResponses(id);
+      const answer = await onGetAllCustomerResponses({ customerId });
 
       if (answer) {
         setAnswers(answer);
@@ -27,3 +27,5 @@ export const useAnswers = (id) => {
 
   return { answers, loading };
 };
+
+export default useAnswers;

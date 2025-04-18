@@ -1,13 +1,14 @@
-import { FieldValues, UseFormRegister } from "react-hook-form";
+import { cn } from "@/lib/utils";
 
-const DomainSelect = ({ register, domains }) => {
+const DomainSelect = ({ domains, setValue, className, value }) => {
   return (
     <div className="flex flex-col py-0">
       <select
-        {...register("domain")}
-        className="px-3 py-3 text-sm border-[1px] rounded-lg"
+        onChange={(e) => setValue?.(e.target.value)}
+        className={cn("px-3 py-3 text-sm border-[1px] rounded-lg", className)}
+        value={value || "empty"}
       >
-        <option disabled selected>
+        <option disabled value={"empty"}>
           Domain name
         </option>
 

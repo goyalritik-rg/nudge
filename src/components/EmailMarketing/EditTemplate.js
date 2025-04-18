@@ -1,28 +1,22 @@
 import Button from "@/common/components/Button";
 import Layout from "@/common/form/Layout";
-import { useEditEmail } from "@/hooks/useEditEmail";
-import React, { useEffect } from "react";
+import useEditTemplate from "@/hooks/useEditTemplate";
+import { useEffect } from "react";
 
 const EditTemplate = ({
-  id,
-  errors,
-  control,
-  onCreateEmailTemplate = () => {},
-  setDefault = () => {},
+  templateId: id,
+  template = "",
+  getAllCampaigns = () => {},
 }) => {
-  const { loading, template } = useEditEmail(id);
+  const { editing, onCreateEmailTemplate, control, errors, setValue } =
+    useEditTemplate({ id, refetch: getAllCampaigns });
 
   useEffect(() => {
-    if (!template) {
-      return;
-    }
-    console.log("template", template);
-
-    setDefault("description", JSON.parse(template));
-  }, [template]);
+    setValue("description", template ? JSON.parse(template) : "");
+  }, [template, setValue]);
 
   return (
-    <div className="mt-4 border-b border-b-neutral-400 pb-10" key={loading}>
+    <div className="flex flex-col w-full h-full justify-between">
       <Layout
         control={control}
         errors={errors}
@@ -32,18 +26,19 @@ const EditTemplate = ({
           {
             name: "description",
             type: "textarea",
-            label: "Description Template",
+            label: "Description",
             className: "h-30 [resize:none] w-full",
           },
         ]}
       />
 
       <Button
-        className="w-full mt-8"
-        type="outline"
+        variant="default"
+        className="rounded-lg"
+        loading={editing}
         onClick={onCreateEmailTemplate}
       >
-        Save Template
+        Save Changes
       </Button>
     </div>
   );
