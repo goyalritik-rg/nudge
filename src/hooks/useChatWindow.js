@@ -87,7 +87,7 @@ const useChatWindow = () => {
 
     intervalId = setInterval(() => {
       fetchChats();
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [chatRoom]);
