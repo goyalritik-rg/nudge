@@ -21,6 +21,17 @@ const getCodeSnippet = ({ id = "", tech }) => {
     iframe.src = "${process.env.NEXT_PUBLIC_BASE_API_URL}/chatbot"
     iframe.classList.add('chat-frame')
     document.body.appendChild(iframe)
+
+    iframe.onload = () => {
+            iframe.contentWindow.postMessage(
+                JSON.stringify({
+                type: "DEVICE_INFO",
+                width: window.innerWidth,
+                height: window.innerHeight,
+                }),
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}"
+            );
+    };
     
     window.addEventListener("message", (e) => {
         if(e.origin !== "${process.env.NEXT_PUBLIC_BASE_API_URL}") return null
@@ -58,6 +69,17 @@ const getCodeSnippet = ({ id = "", tech }) => {
         iframe.classList.add("chat-frame");
         document.body.appendChild(iframe);
 
+        iframe.onload = () => {
+            iframe.contentWindow.postMessage(
+                JSON.stringify({
+                type: "DEVICE_INFO",
+                width: window.innerWidth,
+                height: window.innerHeight,
+                }),
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}"
+            );
+        };
+
         const handleMessage = (e) => {
             if (e.origin !== "${process.env.NEXT_PUBLIC_BASE_API_URL}") return;
 
@@ -66,8 +88,8 @@ const getCodeSnippet = ({ id = "", tech }) => {
                 iframe.width = dimensions.width;
                 iframe.height = dimensions.height;
                 iframe.contentWindow.postMessage(
-                "e25ae0ba-31c9-4482-b12a-34b3ef9739a5",
-                "${process.env.NEXT_PUBLIC_BASE_API_URL}/"
+                "${id}",
+                "${process.env.NEXT_PUBLIC_BASE_API_URL}"
                 );
             } catch (err) {
                 console.error("Invalid message data", err);
