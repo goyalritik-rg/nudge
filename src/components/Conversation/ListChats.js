@@ -24,6 +24,7 @@ const ListChats = ({
       </div>
     );
   }
+
   return (
     <div className="mt-8 flex flex-col gap-3 overflow-y-auto max-h-[calc(100dvh-250px)] -mr-5 pr-5 chat-window">
       {chatRooms.map((room, index) => {
