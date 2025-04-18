@@ -8,6 +8,7 @@ import { CardDescription } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
 import { useRouter, useSearchParams } from "next/navigation";
+import ListChats from "./ListChats";
 
 const TABS = [
   {
@@ -37,6 +38,7 @@ const LeftMenu = ({ domains = [] }) => {
     chatRoom: activeRoom,
     selectedDomain,
     setSelectedDomain,
+    loading,
   } = useConversation({
     activeTab,
   });
@@ -48,8 +50,6 @@ const LeftMenu = ({ domains = [] }) => {
   useEffect(() => {
     setSelectedDomain(domainId);
   }, [domainId]);
-
-  console.log("hello");
 
   return (
     <div className="w-[45%]">
@@ -77,31 +77,13 @@ const LeftMenu = ({ domains = [] }) => {
                   value={selectedDomain}
                 />
 
-                <div className="mt-8 flex flex-col gap-3 overflow-y-auto max-h-[calc(100dvh-250px)] -mr-5 pr-5 chat-window">
-                  {chatRooms.length ? (
-                    chatRooms.map((room, index) => {
-                      const roomData = room.chatRoom?.[0];
-
-                      if (!roomData) {
-                        return null;
-                      }
-
-                      return (
-                        <ChatCard
-                          key={`${roomData.id}_${index}`}
-                          roomData={roomData}
-                          email={room?.email}
-                          onClick={() => setChatRoom(roomData.id)}
-                          activeRoom={activeRoom}
-                        />
-                      );
-                    })
-                  ) : (
-                    <CardDescription>
-                      No {activeTab} chats for this domain
-                    </CardDescription>
-                  )}
-                </div>
+                <ListChats
+                  loading={loading}
+                  chatRooms={chatRooms}
+                  setChatRoom={setChatRoom}
+                  activeRoom={activeRoom}
+                  activeTab={activeTab}
+                />
               </div>
             </TabsContent>
           );
