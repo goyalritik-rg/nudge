@@ -34,7 +34,7 @@ export const sidebarMenuItems = [
   {
     label: "Appointments",
     icon: CalendarDays,
-    path: "appointment",
+    path: "appointments",
   },
   {
     label: "Email Marketing",

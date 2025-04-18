@@ -1,3 +1,5 @@
+"use client";
+
 // import BreadCrumb from './bread-crumb'
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import { Headphones, Star, Trash } from "lucide-react";

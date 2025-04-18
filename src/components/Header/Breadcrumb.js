@@ -30,7 +30,7 @@ const BreadCrumb = () => {
           ? "Manage your account settings, preferences and integrations"
           : page == "dashboard"
           ? "A detailed overview of your metrics, usage, customers and more"
-          : page == "appointment"
+          : page == "appointments"
           ? "View and edit all your appointments"
           : page == "email-marketing"
           ? "Send bulk emails to your customers"
