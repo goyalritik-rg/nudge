@@ -17,6 +17,8 @@ import { v4 as uuidv4 } from "uuid";
 
 let limitRequest = 0;
 
+const isMobile = window.innerWidth <= 767;
+
 const useChatBot = () => {
   const {
     handleSubmit,
@@ -199,8 +201,6 @@ const useChatBot = () => {
   }, [messageWindowRef, onChats]);
 
   useEffect(() => {
-    const isMobile = window.innerWidth <= 767;
-
     postToParent(
       JSON.stringify({
         width: botOpened ? (isMobile ? "100%" : 450) : 80,
