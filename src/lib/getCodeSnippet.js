@@ -14,7 +14,6 @@ const getCodeSnippet = ({ id = "", tech }) => {
             bottom: 20px;
             right: 20px;
             border: none;
-            transition: all 0.3s ease;
             z-index: 9999;
         }
     \`)
@@ -48,10 +47,9 @@ const getCodeSnippet = ({ id = "", tech }) => {
         iframeStyles(\`
             .chat-frame {
                 position: fixed;
-                bottom: 40px;
-                right: 40px;
+                bottom: 20px;
+                right: 20px;
                 border: none;
-                transition: all 0.3s ease;
                 z-index: 9999;
             }
         \`);

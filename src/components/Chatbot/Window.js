@@ -44,7 +44,7 @@ const BotWindow = forwardRef(
     ref
   ) => {
     return (
-      <div className="h-[640px] w-[420px] flex flex-col bg-white rounded-xl border-[1px] overflow-hidden relative p-4">
+      <div className="h-[640px] w-[100%] md:w-[420px] flex flex-col bg-white rounded-xl border-[1px] overflow-hidden relative p-4">
         <div className="flex gap-2">
           <Avatar className="w-16 h-16">
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

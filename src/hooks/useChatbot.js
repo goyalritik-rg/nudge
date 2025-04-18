@@ -199,9 +199,11 @@ const useChatBot = () => {
   }, [messageWindowRef, onChats]);
 
   useEffect(() => {
+    const isMobile = window.innerWidth <= 767;
+
     postToParent(
       JSON.stringify({
-        width: botOpened ? 550 : 80,
+        width: botOpened ? (isMobile ? "100%" : 450) : 80,
         height: botOpened ? 800 : 80,
       })
     );
