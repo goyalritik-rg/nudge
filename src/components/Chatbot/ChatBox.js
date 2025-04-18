@@ -55,7 +55,7 @@ const ChatBox = (
           style={{
             background: theme || "",
             color: textColor || "",
-            height: height - 328,
+            height: height - 327,
           }}
           className="flex flex-col py-5 gap-3 chat-window overflow-y-auto pb-[85px]"
           ref={ref}

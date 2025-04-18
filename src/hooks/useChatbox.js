@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { onViewUnReadMessages } from "@/actions/conversation";
 import { useChatContext } from "@/context/user-chat-context";
-import { getMonthName } from "@/lib/utils";
+import { formatAMPM, getMonthName } from "@/lib/utils";
 
 const useChatbox = (createdAt, roomId) => {
   const { chatRoom } = useChatContext();
@@ -37,7 +37,7 @@ const useChatbox = (createdAt, roomId) => {
       setMessageSentAt(
         `${messageDate.getDate()} ${
           getMonthName(messageDate.getMonth())?.short_label
-        } ${messageDate.getFullYear()}`
+        } ${messageDate.getFullYear()}, ${formatAMPM(messageDate)}`
       );
     }
   }, [createdAt]);
