@@ -12,12 +12,7 @@ import { ChatBotMessageSchema } from "@/schemas/conversation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-
-let limitRequest = 0;
-
-const isMobile = window.innerWidth <= 767;
 
 const useChatBot = () => {
   const {
@@ -32,6 +27,9 @@ const useChatBot = () => {
   });
 
   const values = watch();
+
+  const limitRequest = useRef(0);
+  const [dimensions, setDimensions] = useState({});
 
   const messageWindowRef = useRef(null);
 
@@ -201,23 +199,44 @@ const useChatBot = () => {
   }, [messageWindowRef, onChats]);
 
   useEffect(() => {
+    const { height, width } = dimensions;
+
     postToParent(
       JSON.stringify({
-        width: botOpened ? (isMobile ? "100%" : 450) : 80,
-        height: botOpened ? 800 : 80,
+        width: botOpened ? (width > 440 ? 440 : "90%") : 80,
+        height: botOpened ? 0.95 * Number(height) : 80,
       })
     );
-  }, [botOpened]);
+  }, [botOpened, dimensions]);
 
   useEffect(() => {
     window.addEventListener("message", (e) => {
       const botid = e.data;
 
-      if (limitRequest < 1 && typeof botid == "string") {
+      if (limitRequest.current < 1 && typeof botid == "string") {
         onGetDomainChatBot(botid);
-        limitRequest++;
+        limitRequest.current++;
       }
     });
+  }, []);
+
+  useEffect(() => {
+    const handleMessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+
+        const { type, ...rest } = data || {};
+
+        if (data.type === "DEVICE_INFO") {
+          setDimensions(rest);
+        }
+      } catch (err) {
+        console.log("Error parsing message", err);
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   useEffect(() => {
@@ -280,6 +299,7 @@ const useChatBot = () => {
     values,
     submitLoading,
     onAiTyping,
+    dimensions,
   };
 };
 

@@ -40,11 +40,17 @@ const BotWindow = forwardRef(
       help,
       values = {},
       submitLoading = false,
+      dimensions = {},
     },
     ref
   ) => {
+    const { height } = dimensions || {};
+
     return (
-      <div className="h-[640px] w-[100%] md:w-[420px] flex flex-col bg-white rounded-xl border-[1px] overflow-hidden relative p-4">
+      <div
+        style={{ height: Number(height) - 80 }}
+        className="w-[100%] flex flex-col bg-white rounded-xl border-[1px] overflow-hidden relative p-4"
+      >
         <div className="flex gap-2">
           <Avatar className="w-16 h-16">
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
@@ -97,6 +103,7 @@ const BotWindow = forwardRef(
                     realtimeMode={realtimeMode}
                     ref={ref}
                     submitLoading={submitLoading}
+                    dimensions={dimensions}
                   />
                 </div>
               </TabsContent>

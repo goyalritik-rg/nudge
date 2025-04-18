@@ -19,9 +19,12 @@ const ChatBox = (
     control = () => {},
     submitLoading = false,
     realtimeMode = {},
+    dimensions = {},
   },
   ref
 ) => {
+  const { height } = dimensions || {};
+
   const lastChat = chats?.[chats?.length - 1];
 
   function RenderLoading() {
@@ -52,8 +55,9 @@ const ChatBox = (
           style={{
             background: theme || "",
             color: textColor || "",
+            height: Number(height) - 329,
           }}
-          className="flex h-[450px] flex-col py-5 gap-3 chat-window overflow-y-auto pb-[85px]"
+          className="flex flex-col py-5 gap-3 chat-window overflow-y-auto pb-[85px]"
           ref={ref}
         >
           {chats?.map((chat, key) => (
@@ -74,7 +78,7 @@ const ChatBox = (
             name="content"
             disabled={submitLoading}
             placeholder="Type your message..."
-            className="focus-visible:ring-0 py-4 focus-visible:ring-offset-0 bg-muted rounded-none outline-none border-none h-18 w-[95%] pl-4 text-sm"
+            className="focus-visible:ring-0 py-4 focus-visible:ring-offset-0 bg-muted rounded-none outline-none border-none h-16 w-[95%] pl-4 text-sm"
           />
 
           {submitLoading ? (

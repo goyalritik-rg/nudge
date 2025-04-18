@@ -23,6 +23,7 @@ const Chatbot = () => {
     control,
     values = {},
     submitLoading = false,
+    dimensions = {},
   } = useChatBot();
 
   useEffect(() => {
@@ -57,6 +58,7 @@ const Chatbot = () => {
           control={control}
           values={values}
           submitLoading={submitLoading}
+          dimensions={dimensions}
         />
       )}
 
