@@ -41,8 +41,6 @@ const Campaigns = ({ subscription = {}, domains = [] }) => {
     setSelectedDomain(domainId);
   }, [domainId]);
 
-  console.log("selectedDomain", selectedDomain);
-
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center justify-between">

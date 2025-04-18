@@ -4,10 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useConversation from "@/hooks/useConversation";
 import { Mail } from "lucide-react";
 import DomainSelect from "./DomainSelect";
-import LoaderWrapper from "@/common/components/LoaderWrapper";
 import { CardDescription } from "@/components/ui/card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatCard from "./ChatCard";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const TABS = [
   {
@@ -25,15 +25,29 @@ const TABS = [
 const LeftMenu = ({ domains = [] }) => {
   const [activeTab, setActiveTab] = useState("all");
 
+  const { replace } = useRouter();
+
+  const searchParams = useSearchParams();
+
+  const domainId = searchParams.get("domainId");
+
   const {
     chatRooms,
-    loading,
     setChatRoom,
-    register,
     chatRoom: activeRoom,
+    selectedDomain,
+    setSelectedDomain,
   } = useConversation({
     activeTab,
   });
+
+  const onChangeDomain = (val) => {
+    replace(`/conversation?domainId=${val}`);
+  };
+
+  useEffect(() => {
+    setSelectedDomain(domainId);
+  }, [domainId]);
 
   return (
     <div className="w-[45%]">
@@ -55,7 +69,11 @@ const LeftMenu = ({ domains = [] }) => {
           return (
             <TabsContent key={value} value={value}>
               <div className="mt-6 w-full">
-                <DomainSelect domains={domains} register={register} />
+                <DomainSelect
+                  domains={domains}
+                  setValue={onChangeDomain}
+                  value={selectedDomain}
+                />
 
                 <div className="mt-8 flex flex-col gap-3">
                   {chatRooms.length ? (

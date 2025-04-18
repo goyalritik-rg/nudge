@@ -1,25 +1,16 @@
 import { getChatRooms, onGetChatMessages } from "@/actions/conversation";
 import { useChatContext } from "@/context/user-chat-context";
-import { ConversationSearchSchema } from "@/schemas/conversation.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 const useConversation = ({ activeTab = "" }) => {
-  const { control, watch, register } = useForm({
-    resolver: zodResolver(ConversationSearchSchema),
-    mode: "onChange",
-  });
-
   const { setChatRoom, chatRoom } = useChatContext();
 
   const [chatRooms, setChatRooms] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const { domain: domainId } = watch();
+  const [selectedDomain, setSelectedDomain] = useState("");
 
   useEffect(() => {
-    if (!domainId || !activeTab) return;
+    if (!selectedDomain || !activeTab) return;
 
     let intervalId;
 
@@ -27,7 +18,10 @@ const useConversation = ({ activeTab = "" }) => {
       try {
         setLoading(true);
 
-        const rooms = await getChatRooms({ domainId, activeTab });
+        const rooms = await getChatRooms({
+          domainId: selectedDomain,
+          activeTab,
+        });
 
         if (rooms) {
           setChatRooms(rooms.customer);
@@ -46,15 +40,15 @@ const useConversation = ({ activeTab = "" }) => {
     }, 60000);
 
     return () => clearInterval(intervalId);
-  }, [domainId, activeTab]);
+  }, [selectedDomain, activeTab]);
 
   return {
-    control,
     chatRooms,
     loading,
     setChatRoom,
-    register,
     chatRoom,
+    setSelectedDomain,
+    selectedDomain,
   };
 };
 
