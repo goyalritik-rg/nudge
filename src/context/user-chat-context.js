@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { usePathname } from "next/navigation";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const ChatInitialValues = {
   chatRoom: undefined,
@@ -19,6 +20,14 @@ export const ChatProvider = ({ children }) => {
   const [loading, setLoading] = useState(ChatInitialValues.loading);
   const [chatRoom, setChatRoom] = useState(ChatInitialValues.chatRoom);
   const [realtime, setRealtime] = useState(ChatInitialValues.realtime);
+
+  const pathname = usePathname();
+
+  const page = pathname?.split("/")?.pop();
+
+  useEffect(() => {
+    setChatRoom("");
+  }, [page]);
 
   const values = {
     loading,
