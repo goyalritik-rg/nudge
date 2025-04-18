@@ -27,6 +27,13 @@ const ChatBox = (
 
   const lastChat = chats?.[chats?.length - 1];
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      onChat();
+    }
+  };
+
   function RenderLoading() {
     if (realtimeMode?.mode && lastChat?.role === "user") {
       return (
@@ -74,6 +81,7 @@ const ChatBox = (
 
         <div className="flex items-center justify-between backdrop-blur-sm bg-muted absolute left-0 right-0 bottom-1 pr-4 -mx-4">
           <InputController
+            onKeyDown={handleKeyPress}
             control={control}
             name="content"
             disabled={submitLoading}

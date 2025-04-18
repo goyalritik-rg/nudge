@@ -28,6 +28,13 @@ const Messenger = () => {
     placeholder = "Select any chat to send message";
   }
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      onHandleSentMessage();
+    }
+  };
+
   return (
     <div className="flex flex-col relative w-full h-full -mt-5">
       <div className="flex flex-col">
@@ -55,6 +62,7 @@ const Messenger = () => {
 
       <div className="flex items-center justify-between backdrop-blur-sm bg-muted absolute -bottom-16 w-full pr-10">
         <InputController
+          onKeyDown={handleKeyPress}
           control={control}
           name="content"
           disabled={disabled}
