@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,16 +8,34 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fullname     String
-  clerkId      String     @unique
-  type         String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  stripeId     String?
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullname  String
+  clerkId   String   @unique
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Razorpay business account info
+  razorpayContactId     String? @unique
+  razorpayFundAccountId String? @unique
+  payoutEnabled         Boolean @default(false)
+  payoutPercentage      Int     @default(95) // 5% goes to platform
+
+  subscription RazorpaySubscription?
   domains      Domain[]
   campaign     Campaign[]
-  subscription Billings?
+}
+
+model RazorpaySubscription {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  razorpayId   String?   @unique // Now optional and unique only if set
+  planId       String    @default("free")
+  emails       Int       @default(100)
+  currentStart DateTime
+  currentEnd   DateTime?
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String    @unique @db.Uuid
+  createdAt    DateTime  @default(now())
 }
 
 model Domain {
@@ -50,14 +62,6 @@ model ChatBot {
   helpdesk       Boolean @default(false)
   Domain         Domain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
   domainId       String? @unique @db.Uuid
-}
-
-model Billings {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  plan    Plans   @default(STANDARD)
-  credits Int     @default(100)
-  User    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String? @unique @db.Uuid
 }
 
 model HelpDesk {
@@ -110,7 +114,7 @@ model ChatMessage {
   message    String
   role       Role?
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  updatedAt  DateTime  @default(now())
   ChatRoom   ChatRoom? @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   chatRoomId String?   @db.Uuid
   seen       Boolean   @default(false)
