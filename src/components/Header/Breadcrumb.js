@@ -11,17 +11,6 @@ const BreadCrumb = () => {
     <div className="flex flex-col ">
       <div className="flex gap-5 items-center">
         <h2 className="text-3xl font-bold capitalize">{page}</h2>
-        {/* {page === "conversation" && chatRoom && (
-          <div className="flex items-center gap-2">
-            <Switch
-              key={realtime}
-              checked={realtime}
-              onCheckedChange={onActivateRealtime}
-              className="data-[state=checked]:bg-orange-600 data-[state=unchecked]:bg-orange-200"
-            />
-            <Label htmlFor="realtime-mode">Realtime Mode</Label>
-          </div>
-        )} */}
       </div>
 
       <p className="text-gray-500 text-sm mt-1">

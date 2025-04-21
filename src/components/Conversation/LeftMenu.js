@@ -4,9 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useConversation from "@/hooks/useConversation";
 import { Mail } from "lucide-react";
 import DomainSelect from "./DomainSelect";
-import { CardDescription } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import ChatCard from "./ChatCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import ListChats from "./ListChats";
 
@@ -23,7 +21,7 @@ const TABS = [
   },
 ];
 
-const LeftMenu = () => {
+const LeftMenu = ({ chatRoom = "", setChatRoom = () => {} }) => {
   const [activeTab, setActiveTab] = useState("all");
 
   const { replace } = useRouter();
@@ -32,16 +30,10 @@ const LeftMenu = () => {
 
   const domainId = searchParams.get("domainId");
 
-  const {
-    chatRooms,
-    setChatRoom,
-    chatRoom: activeRoom,
-    selectedDomain,
-    setSelectedDomain,
-    loading,
-  } = useConversation({
-    activeTab,
-  });
+  const { chatRooms, selectedDomain, setSelectedDomain, loading } =
+    useConversation({
+      activeTab,
+    });
 
   const onChangeDomain = (val) => {
     replace(`/conversation?domainId=${val}`);
@@ -80,7 +72,7 @@ const LeftMenu = () => {
                   loading={loading}
                   chatRooms={chatRooms}
                   setChatRoom={setChatRoom}
-                  activeRoom={activeRoom}
+                  activeRoom={chatRoom}
                   activeTab={activeTab}
                 />
               </div>

@@ -1,10 +1,7 @@
-import { getChatRooms, onGetChatMessages } from "@/actions/conversation";
-import { useChatContext } from "@/context/user-chat-context";
+import { getChatRooms } from "@/actions/conversation";
 import { useEffect, useState } from "react";
 
 const useConversation = ({ activeTab = "" }) => {
-  const { setChatRoom, chatRoom } = useChatContext();
-
   const [chatRooms, setChatRooms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedDomain, setSelectedDomain] = useState("");
@@ -45,8 +42,6 @@ const useConversation = ({ activeTab = "" }) => {
   return {
     chatRooms,
     loading,
-    setChatRoom,
-    chatRoom,
     setSelectedDomain,
     selectedDomain,
   };

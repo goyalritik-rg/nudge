@@ -5,22 +5,24 @@ import Bubble from "@/components/Chatbot/Bubble";
 import useChatWindow from "@/hooks/useChatWindow";
 import { cn } from "@/lib/utils";
 import { SendHorizonal } from "lucide-react";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
 
-const Messenger = () => {
+const Messenger = ({ chatRoom = "" }) => {
   const {
     messageWindowRef,
     chats,
-    chatRoom,
     onHandleSentMessage,
     control,
-    realtime: isRealTime = false,
-  } = useChatWindow();
+    isRealtime = false,
+    handleToggleRealtime,
+  } = useChatWindow({ chatRoom });
 
-  const disabled = !chatRoom || !isRealTime;
+  const disabled = !chatRoom || !isRealtime;
 
   let placeholder = "Type your message...";
 
-  if (!isRealTime) {
+  if (!isRealtime) {
     placeholder = "Enable Realtime Mode to start sending messages";
   }
 
@@ -37,6 +39,16 @@ const Messenger = () => {
 
   return (
     <div className="flex flex-col relative w-full h-full -mt-5">
+      <div className="flex items-center gap-2 fixed top-10 right-[20%]">
+        <Switch
+          key={isRealtime}
+          checked={isRealtime}
+          onCheckedChange={handleToggleRealtime}
+          className="data-[state=checked]:bg-orange-600 data-[state=unchecked]:bg-orange-200"
+        />
+        <Label htmlFor="realtime-mode">Realtime Mode</Label>
+      </div>
+
       <div className="flex flex-col">
         <div
           ref={messageWindowRef}

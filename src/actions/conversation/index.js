@@ -31,22 +31,6 @@ export const onToggleRealtime = async (id, state) => {
   }
 };
 
-export const onGetConversationMode = async (id) => {
-  try {
-    const mode = await client.chatRoom.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        live: true,
-      },
-    });
-    return mode;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getChatRooms = async ({ domainId, activeTab = "" }) => {
   try {
     const domains = await client.domain.findUnique({
@@ -140,16 +124,6 @@ export const onViewUnReadMessages = async (id) => {
     console.log(error);
   }
 };
-
-// export const onRealTimeChat = async (chatroomId, message, id, role) => {
-//   pusherServer.trigger(chatroomId, "realtime-mode", {
-//     chat: {
-//       message,
-//       id,
-//       role,
-//     },
-//   });
-// };
 
 export const onOwnerSendMessage = async (chatroomId, message, role) => {
   try {

@@ -1,15 +1,17 @@
-import { onGetChatMessages, onOwnerSendMessage } from "@/actions/conversation";
-import { useChatContext } from "@/context/user-chat-context";
+import {
+  onGetChatMessages,
+  onOwnerSendMessage,
+  onToggleRealtime,
+} from "@/actions/conversation";
 import { ChatBotMessageSchema } from "@/schemas/conversation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const useChatWindow = () => {
+const useChatWindow = ({ chatRoom = "" }) => {
   const [chats, setChats] = useState([]);
-
-  const { loading, chatRoom, realtime } = useChatContext();
+  const [isRealtime, setIsRealtime] = useState(false);
 
   const messageWindowRef = useRef(null);
 
@@ -36,7 +38,9 @@ const useChatWindow = () => {
     try {
       const chatRoomData = await onGetChatMessages(chatRoom);
 
-      const { message: allMessages } = chatRoomData?.[0] || {};
+      const { message: allMessages, live = false } = chatRoomData?.[0] || {};
+
+      setIsRealtime(live);
 
       if (allMessages) {
         setChats(allMessages);
@@ -66,19 +70,24 @@ const useChatWindow = () => {
         onScrollToBottom();
       }
 
-      //   if (message) {
-      //     await onRealTimeChat(
-      //       chatRoom,
-      //       message.message[0].message,
-      //       message.message[0].id,
-      //       "assistant"
-      //     );
-      //   }
       reset();
     } catch (error) {
       console.log(error);
     }
   });
+
+  const handleToggleRealtime = async (status) => {
+    try {
+      const room = await onToggleRealtime(chatRoom, status);
+
+      if (room) {
+        setIsRealtime(status);
+        toast.success(room.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     let intervalId;
@@ -92,28 +101,14 @@ const useChatWindow = () => {
     return () => clearInterval(intervalId);
   }, [chatRoom]);
 
-  // useEffect(() => {
-  //   if (chatRoom) {
-  //     pusherClient.subscribe(chatRoom)
-  //     pusherClient.bind('realtime-mode', (data) => {
-  //       setChats((prev) => [...prev, data.chat])
-  //     })
-
-  //     return () => {
-  //       pusherClient.unbind('realtime-mode')
-  //       pusherClient.unsubscribe(chatRoom)
-  //     }
-  //   }
-  // }, [chatRoom])
-
   return {
     messageWindowRef,
     control,
     onHandleSentMessage,
     chats,
-    loading,
     chatRoom,
-    realtime,
+    isRealtime,
+    handleToggleRealtime,
   };
 };
 

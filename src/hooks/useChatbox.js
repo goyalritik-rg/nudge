@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { onViewUnReadMessages } from "@/actions/conversation";
-import { useChatContext } from "@/context/user-chat-context";
+// import { onViewUnReadMessages } from "@/actions/conversation";
 import { formatAMPM, getMonthName } from "@/lib/utils";
 
 const useChatbox = (createdAt, roomId) => {
-  const { chatRoom } = useChatContext();
-
   const [messageSentAt, setMessageSentAt] = useState("");
-  const [urgent, setUrgent] = useState(false);
+  // const [urgent, setUrgent] = useState(false);
 
   useEffect(() => {
     if (!createdAt) return;
@@ -27,12 +24,13 @@ const useChatbox = (createdAt, roomId) => {
         hour: "2-digit",
         minute: "2-digit",
       });
-      setMessageSentAt(timeString);
+
+      setMessageSentAt(`Today ${timeString}`);
 
       const hoursAgo = (now - messageDate) / (1000 * 60 * 60); // hours
-      if (hoursAgo < 2) {
-        setUrgent(true);
-      }
+      // if (hoursAgo < 2) {
+      //   setUrgent(true);
+      // }
     } else {
       setMessageSentAt(
         `${messageDate.getDate()} ${
@@ -42,22 +40,22 @@ const useChatbox = (createdAt, roomId) => {
     }
   }, [createdAt]);
 
-  useEffect(() => {
-    const markSeen = async () => {
-      if (chatRoom === roomId && urgent && roomId) {
-        try {
-          await onViewUnReadMessages(roomId);
-          setUrgent(false);
-        } catch (err) {
-          console.error("Failed to mark as seen:", err);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const markSeen = async () => {
+  //     if (chatRoom === roomId && urgent && roomId) {
+  //       try {
+  //         await onViewUnReadMessages(roomId);
+  //         setUrgent(false);
+  //       } catch (err) {
+  //         console.error("Failed to mark as seen:", err);
+  //       }
+  //     }
+  //   };
 
-    markSeen();
-  }, [chatRoom, urgent, roomId]);
+  //   markSeen();
+  // }, [chatRoom, urgent, roomId]);
 
-  return { messageSentAt, urgent };
+  return { messageSentAt };
 };
 
 export default useChatbox;
