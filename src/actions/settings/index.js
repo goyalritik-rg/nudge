@@ -1,7 +1,8 @@
 "use server";
 
+import GLOBAL_CONSTANTS from "@/constants";
 import { client } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs";
+import { clerkClient, currentUser } from "@clerk/nextjs";
 
 export const onIntegrateDomain = async (domain, icon) => {
   const user = await currentUser();
@@ -23,7 +24,7 @@ export const onIntegrateDomain = async (domain, icon) => {
         },
         subscription: {
           select: {
-            plan: true,
+            planId: true,
           },
         },
       },
@@ -47,13 +48,15 @@ export const onIntegrateDomain = async (domain, icon) => {
       };
     }
 
+    const planID = subscription?.subscription?.planId;
+    const totalDomains = subscription._count.domains;
+
     if (
-      (subscription?.subscription?.plan == "STANDARD" &&
-        subscription._count.domains < 1) ||
-      (subscription?.subscription?.plan == "PRO" &&
-        subscription._count.domains < 5) ||
-      (subscription?.subscription?.plan == "ULTIMATE" &&
-        subscription._count.domains < 10)
+      (planID == GLOBAL_CONSTANTS.subscriptions_plan_id.STANDARD &&
+        totalDomains < 1) ||
+      (planID == GLOBAL_CONSTANTS.subscriptions_plan_id.PRO &&
+        totalDomains < 5) ||
+      planID == GLOBAL_CONSTANTS.subscriptions_plan_id.ULTIMATE
     ) {
       const newDomain = await client.user.update({
         where: {
@@ -66,7 +69,7 @@ export const onIntegrateDomain = async (domain, icon) => {
               icon,
               chatBot: {
                 create: {
-                  welcomeMessage: "Hey there, have a question? Text us here",
+                  welcomeMessage: GLOBAL_CONSTANTS.chatbot.welcome_message,
                 },
               },
             },
@@ -78,6 +81,7 @@ export const onIntegrateDomain = async (domain, icon) => {
         return { status: 200, message: "Domain successfully added" };
       }
     }
+
     return {
       status: 400,
       message:
@@ -88,66 +92,16 @@ export const onIntegrateDomain = async (domain, icon) => {
   }
 };
 
-export const getAllUserDomains = async () => {
-  const user = await currentUser();
-
-  if (!user) return;
-
-  try {
-    const domains = await client.user.findUnique({
-      where: {
-        clerkId: user.id,
-      },
-      select: {
-        id: true,
-        domains: {
-          select: {
-            name: true,
-            icon: true,
-            id: true,
-            customer: {
-              select: {
-                chatRoom: {
-                  select: {
-                    id: true,
-                    live: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-    return { ...domains };
-  } catch (error) {
-    toast.error(error);
-  }
-};
-
-export const getCurrentSubscriptionPlan = async () => {
+export const onUpdatePassword = async (password) => {
   try {
     const user = await currentUser();
 
-    if (!user) {
-      return;
-    }
+    if (!user) return null;
 
-    const plan = await client.user.findUnique({
-      where: {
-        clerkId: user.id,
-      },
-      select: {
-        subscription: {
-          select: {
-            plan: true,
-          },
-        },
-      },
-    });
+    const update = await clerkClient.users.updateUser(user.id, { password });
 
-    if (plan) {
-      return plan.subscription?.plan;
+    if (update) {
+      return { status: 200, message: "Password updated" };
     }
   } catch (error) {
     console.log(error);
@@ -165,11 +119,6 @@ export const getDomainDetails = async (domainId) => {
         clerkId: user.id,
       },
       select: {
-        subscription: {
-          select: {
-            plan: true,
-          },
-        },
         domains: {
           where: {
             id: domainId,
@@ -242,10 +191,6 @@ export const onUpdateDomain = async (id, name) => {
 };
 
 export const onChatBotImageUpdate = async (id, icon) => {
-  const user = await currentUser();
-
-  if (!user) return;
-
   try {
     const domain = await client.domain.update({
       where: {
@@ -302,6 +247,7 @@ export const onUpdateWelcomeMessage = async (message, domainId) => {
     console.log(error);
   }
 };
+
 export const onDeleteUserDomain = async (id) => {
   const user = await currentUser();
 

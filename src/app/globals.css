@@ -210,3 +210,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+uc-copyright,uc-source-list{
+  display: none !important;
+}
+.uc-content{
+  padding: 0 !important;
+  padding-top: 6px !important;
+}

@@ -1,18 +1,17 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import useSidebar from "@/hooks/useSidebar";
+import { usePathname } from "next/navigation";
 
 const BreadCrumb = () => {
-  const { chatRoom, loading, onActivateRealtime, page, realtime } =
-    useSidebar();
+  const pathname = usePathname();
+
+  const page = pathname.split("/").pop();
 
   return (
     <div className="flex flex-col ">
       <div className="flex gap-5 items-center">
         <h2 className="text-3xl font-bold capitalize">{page}</h2>
-        {page === "conversation" && chatRoom && (
+        {/* {page === "conversation" && chatRoom && (
           <div className="flex items-center gap-2">
             <Switch
               key={realtime}
@@ -22,7 +21,7 @@ const BreadCrumb = () => {
             />
             <Label htmlFor="realtime-mode">Realtime Mode</Label>
           </div>
-        )}
+        )} */}
       </div>
 
       <p className="text-gray-500 text-sm mt-1">

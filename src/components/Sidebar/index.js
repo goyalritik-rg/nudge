@@ -1,6 +1,5 @@
 "use client";
 
-import useSidebar from "@/hooks/useSidebar";
 import { cn } from "@/lib/utils";
 import Banner from "@/common/components/Banner";
 import { LogOut, Menu } from "lucide-react";
@@ -9,9 +8,20 @@ import Domains from "./Domains";
 import { sidebarMenuItems } from "@/config/menu";
 import Modal from "@/common/components/Modal";
 import Button from "@/common/components/Button";
+import { useState } from "react";
+import { useDashboardContext } from "@/context/dashboard-context";
+import { usePathname } from "next/navigation";
 
-const Sidebar = ({ domains = [] }) => {
-  const { expand, onExpand, page, onSignOut, loading } = useSidebar();
+const Sidebar = () => {
+  const [expand, setExpand] = useState(false);
+
+  const { handleLogout } = useDashboardContext();
+
+  const pathname = usePathname();
+
+  const page = pathname.split("/").pop();
+
+  const handleToggle = () => setExpand((p) => !p);
 
   const size = expand ? "max" : "min";
 
@@ -35,7 +45,7 @@ const Sidebar = ({ domains = [] }) => {
 
         <Menu
           className="cursor-pointer animate-fade-in delay-300 fill-mode-forwards"
-          onClick={onExpand}
+          onClick={handleToggle}
         />
       </div>
 
@@ -54,7 +64,7 @@ const Sidebar = ({ domains = [] }) => {
             <MenuItem size={size} {...menu} key={key} current={page} />
           ))}
 
-          <Domains domains={domains} size={size} />
+          <Domains size={size} />
         </div>
 
         <div className="flex flex-col w-full">
@@ -78,6 +88,7 @@ const Sidebar = ({ domains = [] }) => {
                 )}
               >
                 <LogOut />
+
                 {size === "max" ? (
                   <span className="text-sm hover:text-foreground">
                     Sign Out
@@ -96,11 +107,7 @@ const Sidebar = ({ domains = [] }) => {
               </Modal.Body>
 
               <Modal.Footer className="flex justify-end items-center gap-2">
-                <Button
-                  onClick={onSignOut}
-                  loading={loading}
-                  className="font-normal"
-                >
+                <Button onClick={handleLogout} className="font-normal">
                   Proceed
                 </Button>
               </Modal.Footer>

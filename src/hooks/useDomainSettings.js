@@ -1,5 +1,4 @@
 import {
-  getDomainDetails,
   onChatBotImageUpdate,
   onDeleteUserDomain,
   onUpdateDomain,

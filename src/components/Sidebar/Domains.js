@@ -1,8 +1,5 @@
 import { cn } from "@/lib/utils";
 import { PlusCircle } from "lucide-react";
-// import { Loader } from "../loader";
-// import FormGenerator from "../forms/form-generator";
-// import UploadButton from "../upload-button";
 import Link from "next/link";
 import Image from "next/image";
 import { useDomain } from "@/hooks/useDomain";
@@ -24,8 +21,15 @@ const controls = [
   },
 ];
 
-const Domains = ({ domains = [], size }) => {
-  const { control, onAddDomain, loading, errors, isDomain } = useDomain();
+const Domains = ({ size }) => {
+  const {
+    control,
+    onAddDomain,
+    loading,
+    errors,
+    isDomain,
+    domains = [],
+  } = useDomain();
 
   return (
     <div

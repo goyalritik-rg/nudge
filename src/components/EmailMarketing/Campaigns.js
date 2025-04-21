@@ -11,12 +11,15 @@ import { useEffect, useState } from "react";
 import DomainSelect from "../Conversation/DomainSelect";
 import LoaderWrapper from "@/common/components/LoaderWrapper";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useDashboardContext } from "@/context/dashboard-context";
 
-const Campaigns = ({ subscription = {}, domains = [] }) => {
+const Campaigns = () => {
   const [selectedCampaign, setSelectedCampaign] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
 
   const { replace } = useRouter();
+
+  const { subscription } = useDashboardContext();
 
   const searchParams = useSearchParams();
 
@@ -45,14 +48,13 @@ const Campaigns = ({ subscription = {}, domains = [] }) => {
     <div className="flex flex-col w-full">
       <div className="flex items-center justify-between">
         <DomainSelect
-          domains={domains}
           setValue={onChangeDomain}
           className="w-[200px]"
           value={selectedDomain}
         />
 
         <div className="flex gap-8 justify-end w-full items-center">
-          <div className="font-bold">{subscription?.credits} credits left</div>
+          <div className="font-bold">{subscription?.emails} credits left</div>
 
           {selectedDomain ? (
             <Modal>

@@ -2,7 +2,6 @@
 
 import { client } from "@/lib/prisma";
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
-import { getAllUserDomains } from "../settings";
 
 export const onCompleteUserRegistration = async (fullname, clerkId, type) => {
   try {
@@ -12,7 +11,11 @@ export const onCompleteUserRegistration = async (fullname, clerkId, type) => {
         clerkId,
         type,
         subscription: {
-          create: {},
+          create: {
+            razorpayId: null,
+            currentStart: new Date(),
+            currentEnd: null,
+          },
         },
       },
       select: {
@@ -26,7 +29,8 @@ export const onCompleteUserRegistration = async (fullname, clerkId, type) => {
       return { status: 200, user: registered };
     }
   } catch (error) {
-    return { status: 400 };
+    console.error("User registration failed:", error);
+    return { status: 400, error: "User registration failed" };
   }
 };
 
@@ -47,15 +51,18 @@ export const getUser = async () => {
         fullname: true,
         id: true,
         type: true,
+        createdAt: true,
+        razorpayContactId: true,
+        razorpayFundAccountId: true,
+        payoutEnabled: true,
+        payoutPercentage: true,
+        domains: true,
+        subscription: true,
       },
     });
 
-    if (userData) {
-      const domains = await getAllUserDomains();
-
-      return { status: 200, user: userData, domains: domains?.domains };
-    }
+    return userData;
   } catch (error) {
-    return { status: 400 };
+    console.log(error);
   }
 };

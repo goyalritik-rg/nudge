@@ -6,12 +6,11 @@ import CodeSnippet from "./CodeSnippet";
 import useDomainSettings from "@/hooks/useDomainSettings";
 import Layout from "@/common/form/Layout";
 import Section from "@/common/components/Section";
-import { BotMessageSquare } from "lucide-react";
 import LockContent from "@/common/components/LockContent";
 import PremiumBadge from "@/common/components/PremiumBadge";
 import ChatBot from "@/common/components/ChatBot";
 
-const SettingsForm = ({ id, name, chatBot, plan }) => {
+const SettingsForm = ({ id, name, chatBot }) => {
   const {
     control,
     onUpdateSettings,

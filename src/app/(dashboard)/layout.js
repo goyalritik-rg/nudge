@@ -1,24 +1,17 @@
-import { getUser } from "@/actions/auth";
 import Sidebar from "@/components/Sidebar";
-import { ChatProvider } from "@/context/user-chat-context";
+import DashboardProvider from "@/context/dashboard-context";
 
 const OwnerLayout = async ({ children }) => {
-  const userData = await getUser();
-
-  if (!userData) {
-    return null;
-  }
-
   return (
-    <ChatProvider>
+    <DashboardProvider>
       <div className="h-full w-full relative flex">
         <div className="sticky h-[100dvh] top-0 p-4 pr-3">
-          <Sidebar domains={userData.domains} />
+          <Sidebar />
         </div>
 
         {children}
       </div>
-    </ChatProvider>
+    </DashboardProvider>
   );
 };
 

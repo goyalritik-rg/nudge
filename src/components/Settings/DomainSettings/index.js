@@ -12,7 +12,7 @@ const DomainSettings = async ({ params = {} }) => {
     redirect("/dashboard");
   }
 
-  const { subscription = {}, domains = [] } = domainData || {};
+  const { domains = [] } = domainData || {};
 
   const { chatBot, id, name, products = [] } = domains?.[0] || {};
 
@@ -32,12 +32,7 @@ const DomainSettings = async ({ params = {} }) => {
       </div>
 
       <div className="w-full flex flex-col gap-15">
-        <SettingsForm
-          plan={subscription?.plan}
-          chatBot={chatBot}
-          id={id}
-          name={name}
-        />
+        <SettingsForm chatBot={chatBot} id={id} name={name} />
 
         <Separator />
 

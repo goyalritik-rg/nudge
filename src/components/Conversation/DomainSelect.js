@@ -1,6 +1,9 @@
+import { useDashboardContext } from "@/context/dashboard-context";
 import { cn } from "@/lib/utils";
 
-const DomainSelect = ({ domains, setValue, className, value }) => {
+const DomainSelect = ({ setValue, className, value }) => {
+  const { domains = [] } = useDashboardContext();
+
   return (
     <div className="flex flex-col py-0">
       <select

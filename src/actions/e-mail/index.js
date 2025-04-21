@@ -4,32 +4,6 @@ import { client } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
 import nodemailer from "nodemailer";
 
-export const onGetUserSubscription = async () => {
-  try {
-    const user = await currentUser();
-    if (!user) return null;
-
-    const userData = await client.user.findUnique({
-      where: {
-        clerkId: user.id,
-      },
-      select: {
-        subscription: {
-          select: {
-            plan: true,
-            credits: true, // include this if you want to show remaining credits
-          },
-        },
-      },
-    });
-
-    return userData?.subscription;
-  } catch (error) {
-    console.error("Error fetching user subscription:", error);
-    return null;
-  }
-};
-
 export const onGetAllCampaigns = async ({ domainId } = {}) => {
   if (!domainId) return null;
 
@@ -106,6 +80,7 @@ export const onGetAllCustomerResponses = async ({ customerId }) => {
     return null;
   }
 };
+
 export const onCreateMarketingCampaign = async ({ name, domainId }) => {
   try {
     const user = await currentUser();
@@ -221,7 +196,7 @@ export const onBulkMailer = async (email = [], campaignId = "") => {
         data: {
           subscription: {
             update: {
-              credits: { decrement: email.length },
+              emails: { decrement: email.length },
             },
           },
         },

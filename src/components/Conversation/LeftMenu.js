@@ -23,7 +23,7 @@ const TABS = [
   },
 ];
 
-const LeftMenu = ({ domains = [] }) => {
+const LeftMenu = () => {
   const [activeTab, setActiveTab] = useState("all");
 
   const { replace } = useRouter();
@@ -72,7 +72,6 @@ const LeftMenu = ({ domains = [] }) => {
             <TabsContent key={value} value={value}>
               <div className="mt-6 w-full">
                 <DomainSelect
-                  domains={domains}
                   setValue={onChangeDomain}
                   value={selectedDomain}
                 />

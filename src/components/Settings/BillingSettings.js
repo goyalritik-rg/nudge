@@ -1,20 +1,25 @@
-import { getCurrentSubscriptionPlan } from "@/actions/settings";
+"use client";
+
 import Modal from "@/common/components/Modal";
 import Section from "@/common/components/Section";
 import subscriptionPlans from "@/config/subscription-plans";
-import { CheckCircle2, Plus, PlusCircle } from "lucide-react";
+import GLOBAL_CONSTANTS from "@/constants";
+import { useDashboardContext } from "@/context/dashboard-context";
+import { CheckCircle2, PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-const BillingSettings = async () => {
-  const plan = await getCurrentSubscriptionPlan();
+const BillingSettings = () => {
+  const { subscription } = useDashboardContext();
 
-  const planFeatures = subscriptionPlans.find(
-    (card) => card.title.toUpperCase() === plan?.toUpperCase()
-  )?.features;
-
-  if (!planFeatures) {
+  if (!subscription) {
     return;
   }
+
+  const { planId } = subscription;
+
+  const currentPlan = subscriptionPlans.find((p) => p.planId === planId);
+
+  const { features, title } = currentPlan || {};
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
@@ -27,7 +32,7 @@ const BillingSettings = async () => {
       <div className="lg:col-span-2 flex justify-start">
         <Modal>
           <Modal.Trigger>
-            {!plan || plan === "STANDARD" ? (
+            {planId === GLOBAL_CONSTANTS.subscriptions_plan_id.STANDARD ? (
               <div className="border border-dashed bg-neutral-400/15 border-neutral-950/50 rounded-2xl w-full md:w-[400px] cursor-pointer h-[220px] flex justify-center items-center gap-2">
                 <PlusCircle className="text-muted-foreground" />
 
@@ -51,7 +56,7 @@ const BillingSettings = async () => {
               description="Tell us about yourself! What do you do? Let’s tailor your experience so it best suits you."
             />
 
-            <Modal.Body className="mt-0 mb-15">Body</Modal.Body>
+            <Modal.Body className="mt-0 mb-15">Body </Modal.Body>
           </Modal.Content>
         </Modal>
       </div>
@@ -59,10 +64,10 @@ const BillingSettings = async () => {
       <div className="lg:col-span-2">
         <h3 className="text-md mb-2">Current Plan</h3>
 
-        <p className="text-xl font-semibold">{plan}</p>
+        <p className="text-xl font-semibold">{title}</p>
 
         <div className="flex gap-2 flex-col mt-2">
-          {planFeatures.map((feature) => (
+          {features.map((feature) => (
             <div key={feature} className="flex gap-2">
               <CheckCircle2 className="text-muted-foreground" />
 
