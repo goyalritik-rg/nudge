@@ -70,6 +70,14 @@ const GLOBAL_CONSTANTS = {
       },
     },
   },
+  subscriptions_plan_id: {
+    STANDARD: "free",
+    PRO: "plan_QKsLITxYhqi2yv",
+    ULTIMATE: "plan_QKsSBinVk0ejXx",
+  },
+  chatbot: {
+    welcome_message: "Hey there, have a question? Text us here",
+  },
 };
 
 export default GLOBAL_CONSTANTS;

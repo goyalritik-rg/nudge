@@ -1,20 +1,38 @@
 "use server";
 
 import { client } from "@/lib/prisma";
+import { razorpay } from "@/lib/razorpay";
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
 
-export const onCompleteUserRegistration = async (fullname, clerkId, type) => {
+export const onCompleteUserRegistration = async (
+  fullname,
+  clerkId,
+  type,
+  email
+) => {
   try {
+    const razorpayCustomer = await razorpay.customers.create({
+      name: fullname,
+      email,
+    });
+
+    if (!razorpayCustomer) {
+      console.error("Razorpay registration failed:", error);
+      return { status: 400, error: "User registration failed" };
+    }
+
     const registered = await client.user.create({
       data: {
         fullname,
         clerkId,
         type,
+        email,
         subscription: {
           create: {
             razorpayId: null,
             currentStart: new Date(),
             currentEnd: null,
+            customerId: razorpayCustomer.id,
           },
         },
       },

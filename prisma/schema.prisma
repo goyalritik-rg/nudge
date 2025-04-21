@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fullname  String
-  clerkId   String   @unique
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullname              String
+  clerkId               String   @unique
+  type                  String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  email                 String
   // Razorpay business account info
-  razorpayContactId     String? @unique
-  razorpayFundAccountId String? @unique
-  payoutEnabled         Boolean @default(false)
-  payoutPercentage      Int     @default(95) // 5% goes to platform
+  razorpayContactId     String?  @unique
+  razorpayFundAccountId String?  @unique
+  payoutEnabled         Boolean  @default(false)
+  payoutPercentage      Int      @default(95) // 5% goes to platform
 
   subscription RazorpaySubscription?
   domains      Domain[]
@@ -28,7 +28,9 @@ model User {
 
 model RazorpaySubscription {
   id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  razorpayId   String?   @unique // Now optional and unique only if set
+  razorpayId   String?   @unique
+  customerId   String?   @unique
+  status       String    @default("active")
   planId       String    @default("free")
   emails       Int       @default(100)
   currentStart DateTime
