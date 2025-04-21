@@ -9,13 +9,6 @@ const APPOINTMENT_TABLE_HEADER = [
   "Domain",
 ];
 
-const getHour = (hour) => {
-  if (hour > 12) {
-    return hour % 12;
-  }
-  return hour;
-};
-
 const AllAppointments = ({ bookings = [] }) => {
   return (
     <DataTable headers={APPOINTMENT_TABLE_HEADER}>
