@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import Responding from "./Responding";
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
-import Loader from "@/common/components/Loader";
 
 const ChatBox = (
   {

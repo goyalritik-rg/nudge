@@ -284,7 +284,7 @@ export const getChatGPTMessage = async (
         return {
           role: "assistant",
           content: `Great! you can follow the link to proceed`,
-          link: generatedLink[0].slice(0, -1),
+          link: generatedLink[0],
         };
       }
     }

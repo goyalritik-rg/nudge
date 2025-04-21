@@ -30,8 +30,13 @@ export const postToParent = (message) => {
   window.parent.postMessage(message, "*");
 };
 
-export const extractURLfromString = (url) => {
-  return url.match(/https?:\/\/[^\s"<>]+/);
+export const extractURLfromString = (text) => {
+  const match = text.match(/https?:\/\/[^\s"<>]+/);
+
+  if (!match) return null;
+
+  // Trim trailing characters like ) or ]
+  return [match[0].replace(/[)\]]+$/, "")];
 };
 
 export const extractEmailsFromString = (text) => {

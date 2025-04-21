@@ -43,22 +43,6 @@ const HelpDesk = ({ helpdesk = [], dimensions = {} }) => {
       ) : (
         <h3>No Questions Found</h3>
       )}
-      {helpdesk?.length ? (
-        <Accordion type="single" collapsible className="w-full">
-          {helpdesk.map((desk, index) => (
-            <AccordionItem
-              key={index}
-              value="item-1"
-              className="!border !border-neutral-300 px-4 rounded-lg mb-4"
-            >
-              <AccordionTrigger>{desk.question}</AccordionTrigger>
-              <AccordionContent>{desk.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      ) : (
-        <h3>No Questions Found</h3>
-      )}
     </div>
   );
 };

@@ -210,32 +210,46 @@ const useChatBot = () => {
   }, [botOpened, dimensions]);
 
   useEffect(() => {
-    window.addEventListener("message", (e) => {
+    const handleRawMessage = (e) => {
       const botid = e.data;
 
+      // Handle non-JSON UUID string
       if (limitRequest.current < 1 && typeof botid === "string") {
-        onGetDomainChatBot(botid);
-        limitRequest.current++;
+        // Only proceed if it's not JSON (i.e., not starting with { or [)
+        const isProbablyJSON =
+          botid.trim().startsWith("{") || botid.trim().startsWith("[");
+        if (!isProbablyJSON) {
+          onGetDomainChatBot(botid);
+          limitRequest.current++;
+        }
       }
-    });
-  }, []);
+    };
 
-  useEffect(() => {
-    const handleMessage = (e) => {
+    const handleJSONMessage = (e) => {
       try {
-        const data = JSON.parse(e.data);
+        if (typeof e.data !== "string") return;
+
+        const trimmed = e.data.trim();
+        if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) return;
+
+        const data = JSON.parse(trimmed);
         const { type, ...rest } = data || {};
 
         if (type === "DEVICE_INFO") {
           setDimensions(rest);
         }
       } catch (err) {
-        console.log("Error parsing message", err);
+        console.log("Error parsing message", err, "Message received:", e.data);
       }
     };
 
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
+    window.addEventListener("message", handleRawMessage);
+    window.addEventListener("message", handleJSONMessage);
+
+    return () => {
+      window.removeEventListener("message", handleRawMessage);
+      window.removeEventListener("message", handleJSONMessage);
+    };
   }, []);
 
   useEffect(() => {
