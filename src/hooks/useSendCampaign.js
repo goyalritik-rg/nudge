@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const useSendCampaign = ({ emails = [], campaignId = "" }) => {
+const useSendCampaign = ({ emails = [], campaignId = "", onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   const { refresh } = useRouter();
@@ -18,6 +18,8 @@ const useSendCampaign = ({ emails = [], campaignId = "" }) => {
         toast.success(mails.message);
 
         refresh();
+
+        onSuccess();
       }
     } catch (error) {
       console.log(error);

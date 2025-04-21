@@ -16,6 +16,7 @@ import { useDashboardContext } from "@/context/dashboard-context";
 const Campaigns = () => {
   const [selectedCampaign, setSelectedCampaign] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const { replace } = useRouter();
 
@@ -34,7 +35,10 @@ const Campaigns = () => {
     loadingCampaigns,
     getAllCampaigns,
     customers: allCustomers = [],
-  } = useCampaign({ domainId: selectedDomain });
+  } = useCampaign({
+    domainId: selectedDomain,
+    onSuccess: () => setShowModal(false),
+  });
 
   const onChangeDomain = (val) => {
     replace(`/email-marketing?domainId=${val}`);
@@ -57,7 +61,7 @@ const Campaigns = () => {
           <div className="font-bold">{subscription?.emails} credits left</div>
 
           {selectedDomain ? (
-            <Modal>
+            <Modal show={showModal} setShow={setShowModal}>
               <Modal.Trigger>
                 <div className={buttonVariants({ variant: "outline" })}>
                   <Plus /> Create Campaign

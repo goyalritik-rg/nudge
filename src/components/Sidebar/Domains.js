@@ -6,6 +6,7 @@ import { useDomain } from "@/hooks/useDomain";
 import Modal from "@/common/components/Modal";
 import Button from "@/common/components/Button";
 import Layout from "@/common/form/Layout";
+import { useState } from "react";
 
 const controls = [
   {
@@ -22,6 +23,8 @@ const controls = [
 ];
 
 const Domains = ({ size }) => {
+  const [showModal, setShowModal] = useState(false);
+
   const {
     control,
     onAddDomain,
@@ -43,7 +46,7 @@ const Domains = ({ size }) => {
       >
         <p className="text-xs text-gray-500 font-semibold">DOMAINS</p>
 
-        <Modal>
+        <Modal show={showModal} setShow={setShowModal}>
           <Modal.Trigger>
             <div className="cursor-pointer text-gray-500 rounded-full border-2">
               <PlusCircle />
@@ -63,7 +66,10 @@ const Domains = ({ size }) => {
             <Modal.Footer>
               <Button
                 className="w-full"
-                onClick={onAddDomain}
+                onClick={async () => {
+                  await onAddDomain();
+                  setShowModal(false);
+                }}
                 loading={loading}
               >
                 Add Domain

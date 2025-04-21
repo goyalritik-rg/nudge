@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const useCampaign = ({ domainId = "" }) => {
+const useCampaign = ({ domainId = "", onSuccess = () => {} }) => {
   const [loading, setLoading] = useState(false);
   const [loadingCampaigns, setLoadingCampaigns] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
@@ -78,6 +78,8 @@ const useCampaign = ({ domainId = "" }) => {
         toast.success(campaign.message);
 
         getAllCampaigns();
+
+        onSuccess();
       }
     } catch (error) {
       console.log(error);

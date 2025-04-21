@@ -47,8 +47,12 @@ function Footer({ children, className }) {
   return <DialogFooter className={className}>{children}</DialogFooter>;
 }
 
-function Modal({ children, className }) {
-  return <Dialog className={className}>{children}</Dialog>;
+function Modal({ children, className, show = false, setShow = () => {} }) {
+  return (
+    <Dialog className={className} open={show} onOpenChange={setShow}>
+      {children}
+    </Dialog>
+  );
 }
 
 Modal.Content = Content;

@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const [expand, setExpand] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const { handleLogout } = useDashboardContext();
 
@@ -79,7 +80,7 @@ const Sidebar = () => {
             </p>
           ) : null}
 
-          <Modal>
+          <Modal show={showModal} setShow={setShowModal}>
             <Modal.Trigger>
               <div
                 className={cn(
@@ -107,7 +108,13 @@ const Sidebar = () => {
               </Modal.Body>
 
               <Modal.Footer className="flex justify-end items-center gap-2">
-                <Button onClick={handleLogout} className="font-normal">
+                <Button
+                  onClick={async () => {
+                    await handleLogout();
+                    setShowModal(false);
+                  }}
+                  className="font-normal"
+                >
                   Proceed
                 </Button>
               </Modal.Footer>

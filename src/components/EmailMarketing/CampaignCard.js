@@ -8,6 +8,7 @@ import EditTemplate from "./EditTemplate";
 import Button from "@/common/components/Button";
 import CustomerTable from "./CustomerTable";
 import useSendCampaign from "@/hooks/useSendCampaign";
+import { useState } from "react";
 
 const CampaignCard = ({
   campaign = {},
@@ -17,11 +18,16 @@ const CampaignCard = ({
   getAllCampaigns = () => {},
   allCustomers = [],
 }) => {
+  const [showEdit, setShowEdit] = useState(false);
+  const [showCustomers, setShowCustomers] = useState(false);
+  const [showSend, setShowSend] = useState(false);
+
   const { id, createdAt, customers = [], name, template } = campaign || {};
 
   const { loading: sendloading = false, sendEmails } = useSendCampaign({
     emails: customers,
     campaignId: id,
+    onSuccess: () => setShowSend(false),
   });
 
   return (
@@ -57,7 +63,7 @@ const CampaignCard = ({
             <CardTitle className="text-xl">{name}</CardTitle>
 
             <div className="flex items-center gap-3">
-              <Modal>
+              <Modal show={showEdit} setShow={setShowEdit}>
                 <Modal.Trigger>
                   <div
                     className={buttonVariants({
@@ -80,12 +86,17 @@ const CampaignCard = ({
                       templateId={id}
                       template={template}
                       getAllCampaigns={getAllCampaigns}
+                      setShowEdit={setShowEdit}
                     />
                   </Modal.Body>
                 </Modal.Content>
               </Modal>
 
-              <Modal className="!w-[700px]">
+              <Modal
+                className="!w-[700px]"
+                show={showCustomers}
+                setShow={setShowCustomers}
+              >
                 <Modal.Trigger>
                   <div
                     className={buttonVariants({
@@ -107,7 +118,10 @@ const CampaignCard = ({
                     <CustomerTable
                       allCustomers={allCustomers}
                       campaignId={id}
-                      refetch={getAllCampaigns}
+                      refetch={() => {
+                        getAllCampaigns();
+                        setShowCustomers(false);
+                      }}
                       customers={customers}
                     />
                   </Modal.Body>
@@ -115,7 +129,7 @@ const CampaignCard = ({
               </Modal>
 
               {customers.length ? (
-                <Modal>
+                <Modal show={showSend} setShow={setShowSend}>
                   <Modal.Trigger>
                     <div
                       className={buttonVariants({

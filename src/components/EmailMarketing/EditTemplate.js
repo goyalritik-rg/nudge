@@ -7,9 +7,16 @@ const EditTemplate = ({
   templateId: id,
   template = "",
   getAllCampaigns = () => {},
+  setShowEdit = () => {},
 }) => {
   const { editing, onCreateEmailTemplate, control, errors, setValue } =
-    useEditTemplate({ id, refetch: getAllCampaigns });
+    useEditTemplate({
+      id,
+      refetch: () => {
+        getAllCampaigns();
+        setShowEdit(false);
+      },
+    });
 
   useEffect(() => {
     setValue("description", template ? JSON.parse(template) : "");
